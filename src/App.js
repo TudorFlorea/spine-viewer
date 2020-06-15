@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
+
+import DropZone from './components/DropZone';
+import {onSpineCreated, dispatchStartAnimation} from './services/events';
 
 function App() {
+
+  const [animations, setAnimations] = useState([]);
+
+  useEffect(() => {
+    // setApp(new new PIXI.Application(window.innerWidth, window.innerHeight));
+    onSpineCreated((data) => {
+        setAnimations(data.animations.map(anim => anim.name));
+    });
+  }, []);
+
+  const handleAnimationClick = (anim) => {
+    return () => {
+      dispatchStartAnimation(anim);
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      <DropZone />
+
+    {animations.map(anim => {
+      return <button key={anim} onClick={handleAnimationClick(anim)}>{anim}</button>
+    })}
+
     </div>
   );
 }

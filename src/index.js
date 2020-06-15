@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import PixiWrapper from './utils/PixiWrapper';
+import "./styles.scss";
+
+// PixiWrapper.init();
+let pixiApp = new PixiWrapper();
+pixiApp.init();
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
