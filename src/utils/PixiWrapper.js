@@ -1,10 +1,15 @@
-import {onFilesLoaded, onStartAnimation, dispatchSpineCreated} from "../services/events";
+import {
+    onFilesLoaded,
+    onStartAnimation,
+    onSpineScaleChange,
+    onCoordsChange,
+    onSetupPose,
+    dispatchSpineCreated,
+    onDebugOptionChange,
+    dispatchCoordsChange
+} from "../services/events";
 
 class PixiWrapper {
-
-    constructor() {
-
-    }
 
     init() {
 
@@ -32,8 +37,28 @@ class PixiWrapper {
 
         let self = this;
 
-        onStartAnimation(function(animation) {
-            self.spine.state.setAnimation(0, animation, true);
+        onStartAnimation(function(animation, loop) {
+            self.spine.state.setAnimation(0, animation, loop);
+        });
+
+        onSpineScaleChange(function(value) {
+            // self.spine[prop] = value;
+            self.spine.transform.scale.x = value;
+            self.spine.transform.scale.y = value;
+        });
+
+        onDebugOptionChange((option, value) => {
+            self.spine[option] = value;
+        });
+
+        onCoordsChange((coords) => {
+            self.spine.x = coords.x;
+            self.spine.y = coords.y;
+        });
+
+        onSetupPose(() => {
+            self.spine.state.clearTrack(0);
+            self.spine.skeleton.setToSetupPose();
         });
 
         onFilesLoaded(function(files) {
@@ -68,8 +93,8 @@ class PixiWrapper {
 
             // now we can create spine instance
             var spine = new PIXI.spine.Spine(spineData);
-            spine.transform.pivot.x = 0.5;
-            spine.transform.pivot.y = 0.5;
+            // spine.transform.pivot.x = 0.5;
+            // spine.transform.pivot.y = 0.5;
             console.log(spine);
             console.log(app);
             console.log(app.stage);
@@ -77,6 +102,14 @@ class PixiWrapper {
 
             // this button mode will mean the hand cursor appears when you roll over the bunny with your mouse
             spine.buttonMode = true;
+
+            spine['drawDebug'] = true;
+            // spine['drawBones'] = true;
+            // spine['drawRegionAttachments'] = true;
+            // spine['drawClipping'] = true;
+            // spine['drawMeshHull'] = true;
+
+            // debugOptions = ['drawBones','drawRegionAttachments','drawClipping','drawMeshHull','drawMeshTriangles','drawPaths','drawBoundingBoxes']
             spine
                 .on('pointerdown', self.onDragStart)
                 .on('pointerup', self.onDragEnd)
@@ -111,6 +144,10 @@ class PixiWrapper {
             const newPosition = this.data.getLocalPosition(this.parent);
             this.x = newPosition.x;
             this.y = newPosition.y;
+            dispatchCoordsChange({
+                x: newPosition.x,
+                y: newPosition.y
+            })
         }
     }
 

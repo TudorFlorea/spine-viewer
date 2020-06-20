@@ -35,7 +35,7 @@ const DropZone = (props) => {
               console.log("all files");
               dispatchFilesLoaded(files)
             } else {
-              console.log("not all files", missing);
+              console.log("not all files", missing, files);
             }
           }
         }
