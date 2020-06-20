@@ -5,6 +5,7 @@ import DropZone from './components/DropZone';
 import Button from './components/Button';
 import CheckBox from './components/CheckBox';
 import TextInput from './components/TextInput';
+import ColorPicker from './components/ColorPicker';
 import {
   onSpineCreated,
   onCoordsChange,
@@ -82,6 +83,10 @@ function App() {
     }
   }
 
+  const handleColorChange = color => {
+    console.log(color);
+  }
+
   return (
     <div className="App container center-align">
 
@@ -143,7 +148,15 @@ function App() {
             </div>
           </div>
         </>
-      ) : (<DropZone />)}
+      ) : (
+        <>
+          <DropZone />
+          <ColorPicker 
+            handleColorChange={handleColorChange}
+          />
+        </>
+      
+      )}
 
 
 
