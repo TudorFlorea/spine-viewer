@@ -6,8 +6,11 @@ import {
     onSetupPose,
     dispatchSpineCreated,
     onDebugOptionChange,
-    dispatchCoordsChange
+    dispatchCoordsChange,
+    onDestroyPixiApp
 } from "../services/events";
+
+import {hexStringToNumber} from '../utils/numberUtils';
 
 class PixiWrapper {
 
@@ -61,68 +64,61 @@ class PixiWrapper {
             self.spine.skeleton.setToSetupPose();
         });
 
-        onFilesLoaded(function(files) {
+        onDestroyPixiApp(() => {
+            self.spine = null;
+            self.app.destroy(true, true);
+        });
+
+        onFilesLoaded(function(data) {
 
             const PIXI = window.PIXI;
+            const files = data.files;
 
             const wrapper = document.getElementById("canvas-wrapper");
-            const app = new PIXI.Application({
-                backgroundColor:0x777777,
-                antialias:true,
-                width:800,
-                height:600
+            self.app = new PIXI.Application({
+                backgroundColor: hexStringToNumber(data.background),
+                antialias: true,
+                width: data.width,
+                height: data.height
             });
-            wrapper.appendChild(app.view);
+            wrapper.appendChild(self.app.view);
 
             console.log("from pixi", files);
 
-            var rawSkeletonData = JSON.parse(files.json); //your skeleton.json file here
+            let rawSkeletonData = JSON.parse(files.json); //your skeleton.json file here
 
-            var spineAtlas = new PIXI.spine.core.TextureAtlas(files.atlas, function(line, callback) {
+            let spineAtlas = new PIXI.spine.core.TextureAtlas(files.atlas, function(line, callback) {
                 // pass the image here.
                 callback(PIXI.BaseTexture.from(files.png));
             }); // specify path, image.png will be added automatically
 
-            var spineAtlasLoader = new PIXI.spine.core.AtlasAttachmentLoader(spineAtlas)
-            var spineJsonParser = new PIXI.spine.core.SkeletonJson(spineAtlasLoader);
+            let spineAtlasLoader = new PIXI.spine.core.AtlasAttachmentLoader(spineAtlas)
+            let spineJsonParser = new PIXI.spine.core.SkeletonJson(spineAtlasLoader);
 
-            // in case if you want everything scaled up two times
-           // spineJsonParser.scale = 2.0; 
-
-            var spineData = spineJsonParser.readSkeletonData(rawSkeletonData);
+            let spineData = spineJsonParser.readSkeletonData(rawSkeletonData);
 
             // now we can create spine instance
-            var spine = new PIXI.spine.Spine(spineData);
-            // spine.transform.pivot.x = 0.5;
-            // spine.transform.pivot.y = 0.5;
+            let spine = new PIXI.spine.Spine(spineData);
             console.log(spine);
-            console.log(app);
-            console.log(app.stage);
+            console.log(self.app);
+            console.log(self.app.stage);
             spine.interactive = true;
 
             // this button mode will mean the hand cursor appears when you roll over the bunny with your mouse
             spine.buttonMode = true;
 
             spine['drawDebug'] = true;
-            // spine['drawBones'] = true;
-            // spine['drawRegionAttachments'] = true;
-            // spine['drawClipping'] = true;
-            // spine['drawMeshHull'] = true;
-
-            // debugOptions = ['drawBones','drawRegionAttachments','drawClipping','drawMeshHull','drawMeshTriangles','drawPaths','drawBoundingBoxes']
             spine
                 .on('pointerdown', self.onDragStart)
                 .on('pointerup', self.onDragEnd)
                 .on('pointerupoutside', self.onDragEnd)
                 .on('pointermove', self.onDragMove);
-            spine.x = app.renderer.width / 2;
-            spine.y = app.renderer.height / 2;
-            app.stage.addChild(spine);
+            spine.x = self.app.renderer.width / 2;
+            spine.y = self.app.renderer.height / 2;
+            self.app.stage.addChild(spine);
             self.spine = spine;
             dispatchSpineCreated(spine.spineData);
         });
-
-        // app.start();
         
     }
 
