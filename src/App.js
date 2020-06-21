@@ -5,6 +5,7 @@ import DropZone from './components/DropZone';
 import Button from './components/Button';
 import CheckBox from './components/CheckBox';
 import TextInput from './components/TextInput';
+import ColorPicker from './components/ColorPicker';
 import {
   onSpineCreated,
   onCoordsChange,
@@ -12,13 +13,19 @@ import {
   dispatchSpineScaleChange,
   dispatchDebugOptionChange,
   dispatchCoordsChange,
-  dispatchSetupPose
+  dispatchSetupPose,
+  dispatchFilesLoaded,
+  dispatchDestroyPixiApp
 } from './services/events';
 import debugOptions from './config/debugOptions';
+import canvasOptions from './config/canvasOptions';
 
 function App() {
 
-  const [coords, setCoords] = useState({x: 0, y: 0});
+  const [files, setFiles] = useState(null);
+  const [canvasBackground, setCanvasBackground] = useState(canvasOptions.canvasBackground);
+  const [dimensions, setDimmensions] = useState(canvasOptions.canvasDimensions);
+  const [coords, setCoords] = useState(canvasOptions.defaultSpineCoords);
   const [debugSpine, setDebugSpine] = useState(debugOptions);
   const [loopAnimations, setLoopAnimations] = useState(true);
   const [spineScale, setSpineScale] = useState(1);
@@ -26,7 +33,6 @@ function App() {
   const [animations, setAnimations] = useState([]);
 
   useEffect(() => {
-    // setApp(new new PIXI.Application(window.innerWidth, window.innerHeight));
     onSpineCreated((data) => {
         setAnimations(data.animations.map(anim => anim.name));
         setSpineLoaded(true);
@@ -34,11 +40,24 @@ function App() {
 
     onCoordsChange((c) => {
       setCoords(c);
-    })
+    });
 
     M.updateTextFields();
     M.Range.init(document.getElementById("scale-range"));
   }, []);
+
+  useEffect(() => {
+    if(files) {
+      dispatchFilesLoaded({
+        files: files,
+        width: dimensions.width,
+        height: dimensions.height,
+        background: canvasBackground
+      });
+      setFiles(null);
+    }
+  }, [files, dimensions, canvasBackground]);
+
 
   const handleAnimationClick = (anim) => {
     return () => {
@@ -62,10 +81,17 @@ function App() {
 
   const handleDebugOptionChange = (option) => {
     return e => {
-      setDebugSpine({
-        ...debugSpine,
-        [option]: e.target.checked
-      });
+
+      setDebugSpine(debugSpine.map(optObj => {
+        if(optObj.prop === option) {
+          return {
+            ...optObj,
+            value: e.target.checked
+          }
+        } else {
+          return optObj;
+        }
+      }));
       dispatchDebugOptionChange(option, e.target.checked);
     }
     
@@ -82,6 +108,32 @@ function App() {
     }
   }
 
+  const handleDimensionChange = (dimension) => {
+    return e => {
+      const newDimensions = {
+        ...dimensions,
+        [dimension]: e.target.value
+      }
+      setDimmensions(newDimensions);
+    }
+  }
+
+  const handleColorChange = color => {
+    console.log(color);
+    setCanvasBackground(color.hex);
+  }
+
+
+  const handleFilesLoaded = files => {
+    setFiles(files);
+  }
+
+  const handleDestroyPixiApp = () => {
+    dispatchDestroyPixiApp();
+    setSpineLoaded(false);
+    setAnimations([]);
+  }
+
   return (
     <div className="App container center-align">
 
@@ -92,12 +144,13 @@ function App() {
             <input type="range" id="scale-range" value={spineScale} min="0.2" max="2" step="0.1" onChange={handleScaleChange} />
           </p>
 
+          <h4>Spine coordinates</h4>
           <div className="row">
             <div className="col s12 m6">
               <TextInput
                 label="X coord"
                 wrapperClassName="x-coord"
-                value={coords.x}
+                value={parseFloat(coords.x).toFixed(2)}
                 onChange={handleCoordChange("x")}
               />
             </div>
@@ -105,7 +158,7 @@ function App() {
               <TextInput
                 label="Y coord"
                 wrapperClassName="y-coord"
-                value={coords.y}
+                value={parseFloat(coords.y).toFixed(2)}
                 onChange={handleCoordChange("y")}
               />
             </div>
@@ -129,7 +182,7 @@ function App() {
             <div className="col m6 s12">
               <h4>Debug options</h4>
               <div className="left-align debug-options-wrapper">
-                {debugOptions.map(option => {
+                {debugSpine.map(option => {
                   return (
                     <CheckBox
                       checked={option.value}
@@ -142,8 +195,49 @@ function App() {
               </div>
             </div>
           </div>
+          <div className="row">
+              <div className="col s12">
+                  <Button 
+                    text="Load new spine"
+                    onClick={handleDestroyPixiApp}
+                    className="btn-large red darken-1"
+                  />
+              </div>
+          </div>
         </>
-      ) : (<DropZone />)}
+      ) : (
+        <>
+          <DropZone 
+            onFilesLoaded={handleFilesLoaded}
+            
+            />
+          <h4>Canvas dimensions</h4>
+          <div className="row">
+            <div className="col s12 m6">
+              <TextInput
+                label="Canvas width"
+                wrapperClassName="x-coord"
+                value={dimensions.width}
+                onChange={handleDimensionChange("width")}
+              />
+            </div>
+            <div className="col s12 m6">
+              <TextInput
+                label="Canvas height"
+                wrapperClassName="y-coord"
+                value={dimensions.height}
+                onChange={handleDimensionChange("height")}
+              />
+            </div>
+          </div>
+          <h4>Canvas background</h4>
+          <ColorPicker 
+            handleColorChange={handleColorChange}
+            color={canvasBackground}
+          />
+        </>
+      
+      )}
 
 
 

@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import {getExtension} from '../../utils/fileUtils';
-import {dispatchFilesLoaded} from '../../services/events';
 
 const missingFiles = (files) => {
     const expectedTypes = ["json", "atlas", "png"];
@@ -15,6 +14,9 @@ const missingFiles = (files) => {
 };
 
 const DropZone = (props) => {
+
+  const {onFilesLoaded} = props;
+
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const files = {};
@@ -33,7 +35,8 @@ const DropZone = (props) => {
             const missing = missingFiles(files);
             if (missing.length === 0) {
               console.log("all files");
-              dispatchFilesLoaded(files)
+              onFilesLoaded(files);
+              // dispatchFilesLoaded(files)
             } else {
               console.log("not all files", missing, files);
             }
@@ -57,7 +60,7 @@ const DropZone = (props) => {
         //reader.readAsText(file)
       })
       
-  }, [])
+  }, [onFilesLoaded])
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
   return (

@@ -6,6 +6,7 @@ const SPINE_SCALE_CHANGE = "SPINE_SCALE_CHANGE";
 const DEBUG_OPTION_CHANGE = "DEBUG_OPTION_CHANGE";
 const COORDS_CHANGE = "COORDS_CHANGE";
 const SETUP_POSE = "SETUP_POSE";
+const DESTROY_PIXI_APP = "DESTROY_PIXI_APP";
 
 export const dispatch = (options) => {
     const {eventId, target = window, detail = {}} = options;
@@ -23,11 +24,11 @@ export const register = (options) => {
     target.addEventListener(eventId, callback);
 };
 
-export const dispatchFilesLoaded = (files) => {
+export const dispatchFilesLoaded = (data) => {
     dispatch({
         eventId: FILES_LOADED,
         detail: {
-            files
+            data
         }
     })
 };
@@ -36,7 +37,22 @@ export const onFilesLoaded = (cb) => {
     register({
         eventId: FILES_LOADED,
         callback: e => {
-            cb(e.detail.files)
+            cb(e.detail.data)
+        }
+    })
+};
+
+export const dispatchDestroyPixiApp = () => {
+    dispatch({
+        eventId: DESTROY_PIXI_APP
+    })
+};
+
+export const onDestroyPixiApp = (cb) => {
+    register({
+        eventId: DESTROY_PIXI_APP,
+        callback: () => {
+            cb()
         }
     })
 };
