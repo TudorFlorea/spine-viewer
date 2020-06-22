@@ -12,6 +12,7 @@
     "react": "^16.13.0",
     "react-color": "^2.18.1",
     "react-dom": "^16.13.0",
+    "react-draggable": "^4.4.3",
     "react-dropzone": "^11.0.1",
     "react-scripts": "3.4.0"
   },

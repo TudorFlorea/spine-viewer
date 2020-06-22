@@ -65,3 +65,23 @@
         text-align: center;
     }
 }
+
+.animations {
+
+    position: absolute;
+    top: 50px;
+    left: 50px;
+
+    &:hover {
+        cursor: move;
+    }
+
+    &--heading {
+        font-size: 1.3em;
+    }
+
+    &--button {
+        display: block;
+        width: 100%;
+    }
+}

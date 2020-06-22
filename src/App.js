@@ -6,6 +6,7 @@ import Button from './components/Button';
 import CheckBox from './components/CheckBox';
 import TextInput from './components/TextInput';
 import ColorPicker from './components/ColorPicker';
+import Animations from './components/Animations';
 import {
   onSpineCreated,
   onCoordsChange,
@@ -139,6 +140,13 @@ function App() {
 
       {spineLoaded ? (
         <>
+         <Animations 
+              loopAnimations={loopAnimations}
+              animations={animations}
+              handleLoopAnimationsChange={handleLoopAnimationsChange}
+              handleAnimationClick={handleAnimationClick}
+              handleSetupPoseClick={handleSetupPoseClick}
+            />
           <h4>Spine scale {spineScale}</h4>
           <p className="range-field">
             <input type="range" id="scale-range" value={spineScale} min="0.2" max="2" step="0.1" onChange={handleScaleChange} />
@@ -163,8 +171,9 @@ function App() {
               />
             </div>
           </div>
-
+         
           <div className="row">
+
             <div className="col m6 s12">
               <h4>Animations</h4>
               <CheckBox 
