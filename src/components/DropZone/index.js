@@ -15,7 +15,7 @@ const missingFiles = (files) => {
 
 const DropZone = (props) => {
 
-  const {onFilesLoaded} = props;
+  const {onFilesLoaded, onError} = props;
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -24,8 +24,14 @@ const DropZone = (props) => {
         const extension = getExtension(file.name);
         const reader = new FileReader()
 
-        reader.onabort = () => console.log('file reading was aborted')
-        reader.onerror = () => console.log('file reading has failed')
+        reader.onabort = () => {
+          const message = `${file.name} reading was aborted`;
+          onError(message);
+        }
+        reader.onerror = () => {
+          const message = `${file.name} reading was aborted`;
+          onError(message);
+        }
         reader.onload = () => {
         // Do whatever you want with the file contents
           const result = reader.result
@@ -39,6 +45,8 @@ const DropZone = (props) => {
               // dispatchFilesLoaded(files)
             } else {
               console.log("not all files", missing, files);
+              const message = `The following files are missing ${missing.join(", ")}`;
+              onError(message);
             }
           }
         }
@@ -60,7 +68,7 @@ const DropZone = (props) => {
         //reader.readAsText(file)
       })
       
-  }, [onFilesLoaded])
+  }, [onFilesLoaded, onError])
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
   return (
