@@ -1,3 +1,23 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fcfafa;
+}
+
+.input-field > label {
+    color: #4e4e4e;
+    font-size: 1.2rem;
+}
+
+.App {
+    &--heading {
+        font-size: 1.8rem;
+    }
+}
 
 .dropzone {
     width: 80%;
@@ -84,4 +104,20 @@
         display: block;
         width: 100%;
     }
+}
+
+.debug {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    padding: 20px;
+
+    &:hover {
+        cursor: move;
+    }
+
+    &--heading {
+        font-size: 1.3em;
+    }
+
 }
