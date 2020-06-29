@@ -20,9 +20,10 @@ const DropZone = (props) => {
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const files = {};
+
     acceptedFiles.forEach((file, i, arr) => {
         const extension = getExtension(file.name);
-        const reader = new FileReader()
+        const reader = new FileReader();
 
         reader.onabort = () => {
           const message = `${file.name} reading was aborted`;
@@ -37,7 +38,7 @@ const DropZone = (props) => {
           const result = reader.result
           console.log(result)
           files[extension] = reader.result;
-          if (i === arr.length - 1) {
+          if (Object.keys(files).length === arr.length) {
             const missing = missingFiles(files);
             if (missing.length === 0) {
               console.log("all files");
