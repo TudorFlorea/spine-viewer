@@ -7,6 +7,7 @@ import TextInput from './components/TextInput';
 import ColorPicker from './components/ColorPicker';
 import Animations from './components/Animations';
 import DebugOptions from './components/DebugOptions';
+import Timeline from './components/Timeline';
 import {
   onSpineCreated,
   onCoordsChange,
@@ -16,7 +17,8 @@ import {
   dispatchCoordsChange,
   dispatchSetupPose,
   dispatchFilesLoaded,
-  dispatchDestroyPixiApp
+  dispatchDestroyPixiApp,
+  dispatchTimelinePlay
 } from './services/events';
 import debugOptions from './config/debugOptions';
 import canvasOptions from './config/canvasOptions';
@@ -130,6 +132,12 @@ function App() {
     }
   }
 
+  const handleTimelinePlay = (timeline) => {
+    return () => {
+      dispatchTimelinePlay(timeline);
+    }
+  }
+
   const handleColorChange = color => {
     console.log(color);
     setCanvasBackground(color.hex);
@@ -170,6 +178,10 @@ function App() {
             coords={coords}
             handleCoordChange={handleCoordChange}
             scaleRange={scaleRange}
+          />
+          <Timeline 
+            animations={animations}
+            handleTimelinePlay={handleTimelinePlay}
           />
           <div className="row">
               <div className="col s12">

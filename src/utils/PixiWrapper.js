@@ -4,6 +4,7 @@ import {
     onSpineScaleChange,
     onCoordsChange,
     onSetupPose,
+    onTimelinePlay,
     dispatchSpineCreated,
     onDebugOptionChange,
     dispatchCoordsChange,
@@ -41,7 +42,36 @@ class PixiWrapper {
         let self = this;
 
         onStartAnimation(function(animation, loop) {
+            self.spine.state.clearTrack(0);
+            self.spine.state.clearListeners();
             self.spine.state.setAnimation(0, animation, loop);
+        });
+
+        onTimelinePlay((timeline) => {
+            console.log("TIMELINE", timeline);
+            let animations = [...timeline];
+            let fistAnimation = animations.shift();
+            self.spine.state.clearTrack(0);
+            self.spine.state.clearListeners();
+            self.spine.state.setAnimation(0, fistAnimation, false);
+            self.spine.state.addListener({
+                // end: function(entry) { 
+                //     console.log('animation was ended at '+entry.trackIndex) 
+                //     const nextAnimation = animations.shift();
+
+                //     if(nextAnimation) {
+                //         self.spine.state.setAnimation(0, nextAnimation, false);
+                //     }
+                // },
+                complete: function(entry) { 
+                    console.log('animation was ended at '+entry.trackIndex) 
+                    const nextAnimation = animations.shift();
+
+                    if(nextAnimation) {
+                        self.spine.state.setAnimation(0, nextAnimation, false);
+                    }
+                }
+            });
         });
 
         onSpineScaleChange(function(value) {
