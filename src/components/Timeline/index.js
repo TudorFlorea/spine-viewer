@@ -68,7 +68,7 @@ const Timeline = props => {
                             <Button 
                                 text="Add"
                                 onClick={addAnimationToTimeline}
-                                className="col m4 s12"
+                                className="col m4 s12 timeline--add-btn"
                             />
                         </div>
                         {selectedAnimations.length > 0 && 
