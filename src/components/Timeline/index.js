@@ -80,7 +80,7 @@ const Timeline = props => {
                                                 <div>
                                                     {anim.name}
                                                     <a href="#!" className="secondary-content">
-                                                        <i onClick={handleAnimationDelete(anim.id)} className="material-icons">delete</i>
+                                                        <i onClick={handleAnimationDelete(anim.id)} className="material-icons red-text text-darken-1">delete</i>
                                                     </a>
                                                 </div>
                                             </li>

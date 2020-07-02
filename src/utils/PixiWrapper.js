@@ -44,6 +44,7 @@ class PixiWrapper {
         onStartAnimation(function(animation, loop) {
             self.spine.state.clearTrack(0);
             self.spine.state.clearListeners();
+            self.spine.skeleton.setToSetupPose();
             self.spine.state.setAnimation(0, animation, loop);
         });
 
@@ -53,16 +54,9 @@ class PixiWrapper {
             let fistAnimation = animations.shift();
             self.spine.state.clearTrack(0);
             self.spine.state.clearListeners();
+            self.spine.skeleton.setToSetupPose();
             self.spine.state.setAnimation(0, fistAnimation, false);
             self.spine.state.addListener({
-                // end: function(entry) { 
-                //     console.log('animation was ended at '+entry.trackIndex) 
-                //     const nextAnimation = animations.shift();
-
-                //     if(nextAnimation) {
-                //         self.spine.state.setAnimation(0, nextAnimation, false);
-                //     }
-                // },
                 complete: function(entry) { 
                     console.log('animation was ended at '+entry.trackIndex) 
                     const nextAnimation = animations.shift();
