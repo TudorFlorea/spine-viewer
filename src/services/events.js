@@ -7,6 +7,7 @@ const DEBUG_OPTION_CHANGE = "DEBUG_OPTION_CHANGE";
 const COORDS_CHANGE = "COORDS_CHANGE";
 const SETUP_POSE = "SETUP_POSE";
 const DESTROY_PIXI_APP = "DESTROY_PIXI_APP";
+const TIMELINE_PLAY = "TIMELINE_PLAY";
 
 export const dispatch = (options) => {
     const {eventId, target = window, detail = {}} = options;
@@ -56,6 +57,26 @@ export const onDestroyPixiApp = (cb) => {
         }
     })
 };
+
+export const dispatchTimelinePlay = (timeline) => {
+    dispatch({
+        eventId: TIMELINE_PLAY,
+        detail: {
+            timeline
+        }
+    })
+};
+
+export const onTimelinePlay = (cb) => {
+    register({
+        eventId: TIMELINE_PLAY,
+        callback: e => {
+            cb(e.detail.timeline)
+        }
+    })
+};
+
+
 
 export const dispatchDebugOptionChange = (option, value) => {
     dispatch({
