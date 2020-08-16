@@ -8,6 +8,8 @@ const COORDS_CHANGE = "COORDS_CHANGE";
 const SETUP_POSE = "SETUP_POSE";
 const DESTROY_PIXI_APP = "DESTROY_PIXI_APP";
 const TIMELINE_PLAY = "TIMELINE_PLAY";
+const SKIN_CHANGE = "SKIN_CHANGE";
+const SET_MIXIN = "SET_MIXIN";
 
 export const dispatch = (options) => {
     const {eventId, target = window, detail = {}} = options;
@@ -76,7 +78,41 @@ export const onTimelinePlay = (cb) => {
     })
 };
 
+export const dispatchSkinChange = (skin) => {
+    dispatch({
+        eventId: SKIN_CHANGE,
+        detail: {
+            skin
+        }
+    })
+};
 
+export const onSkinChange = (cb) => {
+    register({
+        eventId: SKIN_CHANGE,
+        callback: e => {
+            cb(e.detail.skin)
+        }
+    })
+};
+
+export const dispatchSetMixin = (mixin) => {
+    dispatch({
+        eventId: SET_MIXIN,
+        detail: {
+            mixin
+        }
+    })
+};
+
+export const onSetMixin = (cb) => {
+    register({
+        eventId: SET_MIXIN,
+        callback: e => {
+            cb(e.detail.mixin)
+        }
+    })
+};
 
 export const dispatchDebugOptionChange = (option, value) => {
     dispatch({

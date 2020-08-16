@@ -5,10 +5,12 @@ import {
     onCoordsChange,
     onSetupPose,
     onTimelinePlay,
+    onSkinChange,
     dispatchSpineCreated,
     onDebugOptionChange,
     dispatchCoordsChange,
-    onDestroyPixiApp
+    onDestroyPixiApp,
+    onSetMixin
 } from "../services/events";
 
 import {hexStringToNumber} from '../utils/numberUtils';
@@ -46,6 +48,14 @@ class PixiWrapper {
             self.spine.state.clearListeners();
             self.spine.skeleton.setToSetupPose();
             self.spine.state.setAnimation(0, animation, loop);
+        });
+
+        onSkinChange(skin => {
+            self.spine.skeleton.setSkinByName(skin);
+        });
+
+        onSetMixin(mixin => {
+            self.spine.stateData.setMix(mixin.fromAnim, mixin.toAnim, mixin.duration);
         });
 
         onTimelinePlay((timeline) => {
@@ -141,6 +151,7 @@ class PixiWrapper {
             spine.y = self.app.renderer.height / 2;
             self.app.stage.addChild(spine);
             self.spine = spine;
+            // self.spine.skeleton.setSkinByName("goblin");
             dispatchSpineCreated(spine.spineData);
         });
         
