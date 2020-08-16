@@ -8,6 +8,8 @@ import ColorPicker from './components/ColorPicker';
 import Animations from './components/Animations';
 import DebugOptions from './components/DebugOptions';
 import Timeline from './components/Timeline';
+import Mixins from './components/Mixins';
+
 import {
   onSpineCreated,
   onCoordsChange,
@@ -18,7 +20,9 @@ import {
   dispatchSetupPose,
   dispatchFilesLoaded,
   dispatchDestroyPixiApp,
-  dispatchTimelinePlay
+  dispatchTimelinePlay,
+  dispatchSkinChange,
+  dispatchSetMixin
 } from './services/events';
 import debugOptions from './config/debugOptions';
 import canvasOptions from './config/canvasOptions';
@@ -35,10 +39,12 @@ function App() {
   const [scaleRange, setScaleRange] = useState(canvasOptions.defaultScaleRange);
   const [spineLoaded, setSpineLoaded] = useState(false);
   const [animations, setAnimations] = useState([]);
+  const [skins, setSkins] = useState([]);
 
   useEffect(() => {
     onSpineCreated((data) => {
         setAnimations(data.animations.map(anim => anim.name));
+        setSkins(data.skins.map(skin => skin.name));
         setSpineLoaded(true);
     });
 
@@ -66,6 +72,17 @@ function App() {
   const handleAnimationClick = (anim) => {
     return () => {
       dispatchStartAnimation(anim, loopAnimations);
+    }
+  };
+
+  const handleSetMixinClick = mixin => {
+    dispatchSetMixin(mixin);
+    M.toast({html: "Mixin set"});
+  }
+
+  const handleSkinClick = (skin) => {
+    return () => {
+      dispatchSkinChange(skin);
     }
   };
 
@@ -167,6 +184,8 @@ function App() {
             animations={animations}
             handleLoopAnimationsChange={handleLoopAnimationsChange}
             handleAnimationClick={handleAnimationClick}
+            skins={skins}
+            handleSkinClick={handleSkinClick}
             handleSetupPoseClick={handleSetupPoseClick}
           />
 
@@ -182,6 +201,10 @@ function App() {
           <Timeline 
             animations={animations}
             handleTimelinePlay={handleTimelinePlay}
+          />
+          <Mixins 
+            animations={animations}
+            onAddMixin={handleSetMixinClick}
           />
           <div className="row">
               <div className="col s12">

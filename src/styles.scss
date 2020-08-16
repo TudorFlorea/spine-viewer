@@ -89,8 +89,8 @@ body {
 .animations {
 
     position: absolute;
-    top: 50px;
-    left: 50px;
+    top: 25px;
+    left: 25px;
 
     &:hover {
         cursor: move;
@@ -109,8 +109,8 @@ body {
 
 .debug {
     position: absolute;
-    top: 50px;
-    right: 50px;
+    top: 25px;
+    right: 25px;
     padding: 20px;
 
     &:hover {
@@ -126,7 +126,7 @@ body {
 .timeline {
     position: absolute;
     bottom: 50px;
-    right: 50px;
+    right: 25px;
     padding: 20px;
 
     &:hover {
@@ -136,4 +136,10 @@ body {
     &--add-btn {
         margin-top: 20px;
     }
+}
+
+.mixins {
+    @extend .timeline;
+    left: 25px;
+    right: auto;
 }
