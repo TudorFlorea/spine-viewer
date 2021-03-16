@@ -24,6 +24,7 @@ import {
   dispatchSkinChange,
   dispatchSetMixin
 } from './services/events';
+import {getDemoSpine} from "./services/spineProvider";
 import debugOptions from './config/debugOptions';
 import canvasOptions from './config/canvasOptions';
 
@@ -165,6 +166,12 @@ function App() {
     setFiles(files);
   }
 
+  const handleDemoSpineLoad = () => {
+    getDemoSpine().then(files => {
+      handleFilesLoaded(files);
+    });
+  };
+
   const handleDestroyPixiApp = () => {
     dispatchDestroyPixiApp();
     setSpineLoaded(false);
@@ -218,6 +225,12 @@ function App() {
         </>
       ) : (
         <>
+          <Button 
+            onClick={handleDemoSpineLoad}
+            text="Load Spineboy pro demo"
+            className="App--button"
+          />
+          <h4 className="App--heading">Or load a spine export (png, json and atlas files) in the box below</h4>
           <DropZone 
             onFilesLoaded={handleFilesLoaded}
             onError={handleFilesLoadError}

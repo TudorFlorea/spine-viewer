@@ -107,6 +107,8 @@ class PixiWrapper {
 
             const PIXI = window.PIXI;
             const files = data.files;
+            const rawJson = files.find(file => file.type === "json").data;
+            const rawAtlas = files.find(file => file.type === "atlas").data;
 
             const wrapper = document.getElementById("canvas-wrapper");
             self.app = new PIXI.Application({
@@ -119,11 +121,11 @@ class PixiWrapper {
 
             console.log("from pixi", files);
 
-            let rawSkeletonData = JSON.parse(files.json); //your skeleton.json file here
+            let rawSkeletonData = JSON.parse(rawJson); //your skeleton.json file here
 
-            let spineAtlas = new PIXI.spine.core.TextureAtlas(files.atlas, function(line, callback) {
-                // pass the image here.
-                callback(PIXI.BaseTexture.from(files.png));
+            let spineAtlas = new PIXI.spine.core.TextureAtlas(rawAtlas, function(line, callback) {
+                const imageData = files.find(file => file.path === line).data;
+                callback(PIXI.BaseTexture.from(imageData));
             }); // specify path, image.png will be added automatically
 
             let spineAtlasLoader = new PIXI.spine.core.AtlasAttachmentLoader(spineAtlas)
@@ -151,7 +153,6 @@ class PixiWrapper {
             spine.y = self.app.renderer.height / 2;
             self.app.stage.addChild(spine);
             self.spine = spine;
-            // self.spine.skeleton.setSkinByName("goblin");
             dispatchSpineCreated(spine.spineData);
         });
         

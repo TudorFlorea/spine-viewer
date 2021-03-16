@@ -17,6 +17,11 @@ body {
     &--heading {
         font-size: 1.8rem;
     }
+
+    &--button {
+        margin-top: 20px;
+        font-weight: bold;
+    }
 }
 
 .dropzone {
