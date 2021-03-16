@@ -6,9 +6,12 @@ const missingFiles = (files) => {
     const expectedTypes = ["json", "atlas", "png"];
     const missingFiles = [];
     expectedTypes.forEach(type => {
-      if(!files.hasOwnProperty(type)) {
+      if(files.find(elem => elem.type === type) === undefined) {
         missingFiles.push(type);
       }
+      // if(!files.hasOwnProperty(type)) {
+      //   missingFiles.push(type);
+      // }
     });
     return missingFiles;
 };
@@ -19,8 +22,9 @@ const DropZone = (props) => {
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
-    const files = {};
-
+    // const files = {};
+    const files = [];
+    console.log(acceptedFiles);
     acceptedFiles.forEach((file, i, arr) => {
         const extension = getExtension(file.name);
         const reader = new FileReader();
@@ -34,16 +38,19 @@ const DropZone = (props) => {
           onError(message);
         }
         reader.onload = () => {
-        // Do whatever you want with the file contents
           const result = reader.result
           console.log(result)
-          files[extension] = reader.result;
-          if (Object.keys(files).length === arr.length) {
+          files.push({
+            type: extension,
+            data: reader.result,
+            name: file.name,
+            path: file.path
+          });
+          if (files.length === arr.length) {
             const missing = missingFiles(files);
             if (missing.length === 0) {
               console.log("all files");
               onFilesLoaded(files);
-              // dispatchFilesLoaded(files)
             } else {
               console.log("not all files", missing, files);
               const message = `The following files are missing ${missing.join(", ")}`;
@@ -66,7 +73,6 @@ const DropZone = (props) => {
             default:
                 console.log("Unsopported file format: ", extension);
         }
-        //reader.readAsText(file)
       })
       
   }, [onFilesLoaded, onError])
