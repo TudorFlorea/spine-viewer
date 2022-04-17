@@ -5,7 +5,7 @@ import DropZone from './components/DropZone';
 import Button from './components/Button';
 import TextInput from './components/TextInput';
 import ColorPicker from './components/ColorPicker';
-import Animations from './components/Animations';
+import SpineData from './components/SpineData';
 import DebugOptions from './components/DebugOptions';
 import Timeline from './components/Timeline';
 import Mixins from './components/Mixins';
@@ -22,7 +22,9 @@ import {
   dispatchDestroyPixiApp,
   dispatchTimelinePlay,
   dispatchSkinChange,
-  dispatchSetMixin
+  dispatchSetMixin,
+  onSpineScaleChange,
+  dispatchScaleRangeChange
 } from './services/events';
 import {getDemoSpine} from "./services/spineProvider";
 import debugOptions from './config/debugOptions';
@@ -39,18 +41,26 @@ function App() {
   const [spineScale, setSpineScale] = useState(1);
   const [scaleRange, setScaleRange] = useState(canvasOptions.defaultScaleRange);
   const [spineLoaded, setSpineLoaded] = useState(false);
-  const [animations, setAnimations] = useState([]);
-  const [skins, setSkins] = useState([]);
+  const [spineData, setSpineData] = useState(null);
 
   useEffect(() => {
     onSpineCreated((data) => {
-        setAnimations(data.animations.map(anim => anim.name));
-        setSkins(data.skins.map(skin => skin.name));
-        setSpineLoaded(true);
+      const parsedSpineData = {};
+      parsedSpineData.animations = data.animations.map(anim => anim.name);
+      parsedSpineData.skins = data.skins.map(skin => skin.name);
+      parsedSpineData.slots = data.slots.map(slot => slot.name);
+      parsedSpineData.bones = data.bones.map(bone => bone.name);
+
+      setSpineData(parsedSpineData);
+
     });
 
     onCoordsChange((c) => {
       setCoords(c);
+    });
+
+    onSpineScaleChange(val => {
+      setSpineScale(val);
     });
 
     M.updateTextFields();
@@ -69,6 +79,13 @@ function App() {
     }
   }, [files, dimensions, canvasBackground]);
 
+  useEffect(() => {
+    if(spineData) {
+      setSpineLoaded(true);
+    } else {
+      setSpineLoaded(false);
+    }
+  }, [spineData]);
 
   const handleAnimationClick = (anim) => {
     return () => {
@@ -126,7 +143,6 @@ function App() {
         [coord]: e.target.value
       }
       setCoords(newCoords);
-      dispatchCoordsChange(newCoords);
     }
   }
 
@@ -174,24 +190,32 @@ function App() {
 
   const handleDestroyPixiApp = () => {
     dispatchDestroyPixiApp();
-    setSpineLoaded(false);
-    setAnimations([]);
+    // setSpineLoaded(false);
+    setSpineData(null);
   }
   
   const handleFilesLoadError = message => {
     M.toast({html: message, classes: "red darken-1 text-white"});
   };
+
+  useEffect(() => {
+    dispatchScaleRangeChange(scaleRange);
+  }, [scaleRange]);
+
+  useEffect(() => {
+    dispatchCoordsChange(coords);
+  }, [coords]);
+
   return (
     <div className="App container center-align">
 
       {spineLoaded ? (
         <>
-          <Animations 
+          <SpineData 
             loopAnimations={loopAnimations}
-            animations={animations}
+            spineData={spineData}
             handleLoopAnimationsChange={handleLoopAnimationsChange}
             handleAnimationClick={handleAnimationClick}
-            skins={skins}
             handleSkinClick={handleSkinClick}
             handleSetupPoseClick={handleSetupPoseClick}
           />
@@ -206,11 +230,11 @@ function App() {
             scaleRange={scaleRange}
           />
           <Timeline 
-            animations={animations}
+            animations={spineData.animations}
             handleTimelinePlay={handleTimelinePlay}
           />
-          <Mixins 
-            animations={animations}
+          <Mixins
+            animations={spineData.animations}
             onAddMixin={handleSetMixinClick}
           />
           <div className="row">

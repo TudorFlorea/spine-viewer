@@ -5,6 +5,7 @@ const START_ANIMATION = "START_ANIMATION";
 const SPINE_SCALE_CHANGE = "SPINE_SCALE_CHANGE";
 const DEBUG_OPTION_CHANGE = "DEBUG_OPTION_CHANGE";
 const COORDS_CHANGE = "COORDS_CHANGE";
+const SCALE_RANGE_CHANGE = "SCALE_RANGE_CHANGE";
 const SETUP_POSE = "SETUP_POSE";
 const DESTROY_PIXI_APP = "DESTROY_PIXI_APP";
 const TIMELINE_PLAY = "TIMELINE_PLAY";
@@ -162,6 +163,24 @@ export const onSetupPose = (cb) => {
         eventId: SETUP_POSE,
         callback: () => {
             cb()
+        }
+    })
+};
+
+export const dispatchScaleRangeChange = (scaleRange) => {
+    dispatch({
+        eventId: SCALE_RANGE_CHANGE,
+        detail: {
+            scaleRange
+        }
+    });
+};
+
+export const onScaleRangeChange = (cb) => {
+    register({
+        eventId: SCALE_RANGE_CHANGE,
+        callback: e => {
+            cb(e.detail.scaleRange)
         }
     })
 };
