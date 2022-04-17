@@ -6,8 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import PixiWrapper from './utils/PixiWrapper';
 import "./styles.scss";
 
-// PixiWrapper.init();
-let pixiApp = new PixiWrapper();
+const pixiApp = new PixiWrapper();
 pixiApp.init();
 
 ReactDOM.render(<App />, document.getElementById('root'));

@@ -13,6 +13,12 @@ body {
     font-size: 1.2rem;
 }
 
+#canvas-wrapper {
+    canvas {
+        cursor: grab !important;
+    }
+}
+
 .App {
     &--heading {
         font-size: 1.8rem;
@@ -147,4 +153,41 @@ body {
     @extend .timeline;
     left: 25px;
     right: auto;
+}
+
+.spine-elements {
+    .collapsible-body {
+        cursor: auto;
+        overflow-y: scroll;
+        max-height: 300px;
+    }
+}
+
+.spine-data {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+
+    &__name {
+        background-color: #4f3c3c;
+        color: #fff;
+        flex-grow: 1;
+
+        &--disabled {
+            cursor: auto;
+        }
+
+        &:hover {
+            background-color: #917a7a;
+        }
+    }
+
+    &__copy {
+        background-color: #3c4e4f;
+        color: #fff;
+
+        &:hover {
+            background-color: #90aaac;
+        }
+    }
 }

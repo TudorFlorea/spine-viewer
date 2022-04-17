@@ -10,7 +10,9 @@ import {
     onDebugOptionChange,
     dispatchCoordsChange,
     onDestroyPixiApp,
-    onSetMixin
+    onSetMixin,
+    onScaleRangeChange,
+    dispatchSpineScaleChange
 } from "../services/events";
 
 import {hexStringToNumber} from '../utils/numberUtils';
@@ -19,29 +21,13 @@ class PixiWrapper {
 
     init() {
 
+        // this.addGlobalListeners();
 
-        // let loader = PIXI.loader.add('spineboy','./assets/spineboy-pro.json');
+        const self = this;
 
-        // loader.add('vine','./assets/spine/vine-pro.json')
-
-        //loader.load((loader,res)=>{
-            // console.log(res);
-            // let vine = new PIXI.spine.Spine(res.spineboy.spineData),
-            //     options = [''];
-            // console.log(vine)
-            // // vine
-            // vine.scale.set(0.4);
-            // vine.state.setAnimation(0,'portal',true);
-            // vine.x = 200;
-            // vine.y = 280;
-            // vine.drawDebug = true;
-
-            //app.stage.addChild(vine);
-
-            
-        //});
-
-        let self = this;
+        onScaleRangeChange(scaleRange => {
+            self.scaleRange = scaleRange;
+        });
 
         onStartAnimation(function(animation, loop) {
             self.spine.state.clearTrack(0);
@@ -89,8 +75,11 @@ class PixiWrapper {
         });
 
         onCoordsChange((coords) => {
-            self.spine.x = coords.x;
-            self.spine.y = coords.y;
+
+            if (!self.spine) return;
+
+            self.spine.x = parseFloat(coords.x);
+            self.spine.y = parseFloat(coords.y);
         });
 
         onSetupPose(() => {
@@ -119,7 +108,24 @@ class PixiWrapper {
             });
             wrapper.appendChild(self.app.view);
 
-            console.log("from pixi", files);
+            self.addGlobalListeners();
+
+            // Create the background sprite with a basic white texture
+            let background = new PIXI.Sprite(PIXI.Texture.WHITE);
+            // Set it to fill the screen
+            background.width = self.app.screen.width;
+            background.height = self.app.screen.height;
+            // Tint it to whatever color you want, here red
+            background.tint = hexStringToNumber(data.background);
+            // Add a click handler
+            background.interactive = true;
+            background
+                .on('pointerdown', self.onDragStart.bind(self))
+                .on('pointerup', self.onDragEnd.bind(self))
+                .on('pointerupoutside', self.onDragEnd.bind(self))
+                .on('pointermove', self.onDragMove.bind(self));
+            // Add it to the stage as the first object
+            self.app.stage.addChild(background);
 
             let rawSkeletonData = JSON.parse(rawJson); //your skeleton.json file here
 
@@ -138,49 +144,128 @@ class PixiWrapper {
             console.log(spine);
             console.log(self.app);
             console.log(self.app.stage);
-            spine.interactive = true;
-
-            // this button mode will mean the hand cursor appears when you roll over the bunny with your mouse
-            spine.buttonMode = true;
+            // spine.interactive = true;
 
             spine['drawDebug'] = true;
-            spine
-                .on('pointerdown', self.onDragStart)
-                .on('pointerup', self.onDragEnd)
-                .on('pointerupoutside', self.onDragEnd)
-                .on('pointermove', self.onDragMove);
+
             spine.x = self.app.renderer.width / 2;
             spine.y = self.app.renderer.height / 2;
             self.app.stage.addChild(spine);
             self.spine = spine;
+            window.spine = spine;
+            window.app = self.app;
             dispatchSpineCreated(spine.spineData);
+            dispatchCoordsChange({
+                x: self.spine.x,
+                y: self.spine.y
+            })
         });
         
     }
 
     onDragStart(event) {
-        this.data = event.data;
-        this.alpha = 0.5;
+        this.initalPointerPosition = Object.assign({}, event.data.global);
+        this.initalSpinePosition = {
+            x: this.spine.x,
+            y: this.spine.y
+        };
+        this.spine.alpha = 0.5;
         this.dragging = true;
     }
 
     onDragEnd() {
-        this.alpha = 1;
+        this.spine.alpha = 1;
         this.dragging = false;
-        // set the interaction data to null
-        this.data = null;
+        this.initalPointerPosition = null;
+        this.initalSpinePosition = null;
     }
 
-    onDragMove() {
+    onDragMove(event) {
         if (this.dragging) {
-            const newPosition = this.data.getLocalPosition(this.parent);
-            this.x = newPosition.x;
-            this.y = newPosition.y;
+            const newPosition = event.data.global;
+            const xDelta = newPosition.x - this.initalPointerPosition.x;
+            const yDelta = newPosition.y - this.initalPointerPosition.y;
+
+            this.spine.x = this.initalSpinePosition.x + xDelta;
+            this.spine.y = this.initalSpinePosition.y + yDelta;
+
             dispatchCoordsChange({
-                x: newPosition.x,
-                y: newPosition.y
+                x: this.spine.x,
+                y: this.spine.y
             })
         }
+    }
+
+
+    addGlobalListeners() {
+
+        const self = this;
+
+        this.app.view.addEventListener('wheel', function(event)  {
+            event.preventDefault();
+
+            if (!self.spine || !self.scaleRange) return;
+
+            const oldScale = self.spine.transform.scale;
+            let newScale;
+
+            if (event.deltaY < 0)
+            {
+                console.log('scrolling up');
+                newScale = parseFloat(oldScale.x) + 0.2;
+            }
+            else if (event.deltaY > 0)
+            {
+                console.log('scrolling down');
+                newScale = parseFloat(oldScale.x) - 0.2
+            }
+
+            newScale = newScale.toFixed(1);
+
+            if(newScale < self.scaleRange.min) {
+                newScale = self.scaleRange.min;
+            }
+
+            if(newScale > self.scaleRange.max) {
+                newScale = self.scaleRange.max;
+            }
+
+            dispatchSpineScaleChange(newScale);
+
+        });
+
+        // window.addEventListener('wheel', function(event)  {
+        //     event.preventDefault();
+
+        //     if (!self.spine || !self.scaleRange) return;
+
+        //     const oldScale = self.spine.transform.scale;
+        //     let newScale;
+
+        //     if (event.deltaY < 0)
+        //     {
+        //         console.log('scrolling up');
+        //         newScale = parseFloat(oldScale.x) + 0.2;
+        //     }
+        //     else if (event.deltaY > 0)
+        //     {
+        //         console.log('scrolling down');
+        //         newScale = parseFloat(oldScale.x) - 0.2
+        //     }
+
+        //     newScale = newScale.toFixed(1);
+
+        //     if(newScale < self.scaleRange.min) {
+        //         newScale = self.scaleRange.min;
+        //     }
+
+        //     if(newScale > self.scaleRange.max) {
+        //         newScale = self.scaleRange.max;
+        //     }
+
+        //     dispatchSpineScaleChange(newScale);
+
+        // });
     }
 
 }
