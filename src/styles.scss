@@ -1,193 +1,190 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body {
-    background-color: #fcfafa;
+	background-color: #fcfafa;
 }
 
 .input-field > label {
-    color: #4e4e4e;
-    font-size: 1.2rem;
+	color: #4e4e4e;
+	font-size: 1.2rem;
 }
 
 #canvas-wrapper {
-    canvas {
-        cursor: grab !important;
-    }
+	canvas {
+		cursor: grab !important;
+	}
 }
 
 .App {
-    &--heading {
-        font-size: 1.8rem;
-    }
+	&--heading {
+		font-size: 1.8rem;
+	}
 
-    &--button {
-        margin-top: 20px;
-        font-weight: bold;
-    }
+	&--button {
+		margin-top: 20px;
+		font-weight: bold;
+	}
 }
 
 .dropzone {
-    width: 80%;
-    margin: 20px auto;
-    text-align: center;
-    border: 3px dotted #555;
-    cursor: pointer;
-    padding: 80px 10px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    font-size: 30px;
+	width: 80%;
+	margin: 20px auto;
+	text-align: center;
+	border: 3px dotted #555;
+	cursor: pointer;
+	padding: 80px 10px;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	font-weight: bold;
+	font-size: 30px;
 
-    &--active {
-        border: 3px dotted rgb(30, 179, 50);
-    }
-
+	&--active {
+		border: 3px dotted rgb(30, 179, 50);
+	}
 }
 
 .animation-button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
+	display: block;
+	width: 100%;
+	margin: 10px 0;
 }
 
 .debug-options-wrapper {
-    padding: 30px 20%;
+	padding: 30px 20%;
 }
 
 .color-picker {
-    display: inline-block;
-    padding-top: 5px;
-    margin-right: 10px;
+	display: inline-block;
+	padding-top: 5px;
+	margin-right: 10px;
 
-    &__swatch {
-        padding: 5px;
-        background: #fff;
-        border-radius: 1px;
-        box-shadow: 0 0 0 1px rgba(0,0,0,.1);
-        display: inline-block;
-        cursor: pointer;
-    }
+	&__swatch {
+		padding: 5px;
+		background: #fff;
+		border-radius: 1px;
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+		display: inline-block;
+		cursor: pointer;
+	}
 
-    &__color {
-        width: 110px;
-        height: 30px;
-        border-radius: 2px;
-    }
+	&__color {
+		width: 110px;
+		height: 30px;
+		border-radius: 2px;
+	}
 
-    &__popover {
-        position: absolute;
-        z-index: 2
-    }
+	&__popover {
+		position: absolute;
+		z-index: 2;
+	}
 
-    &__cover {
-        position: fixed;
-        top: 0px;
-        right: 0px;
-        bottom: 0px;
-        left: 0px;
-    }
+	&__cover {
+		position: fixed;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+	}
 
-    &__text {
-        font-size: 12px;
-        display: block;
-        text-align: center;
-    }
+	&__text {
+		font-size: 12px;
+		display: block;
+		text-align: center;
+	}
 }
 
 .animations {
+	position: absolute;
+	top: 25px;
+	left: 25px;
 
-    position: absolute;
-    top: 25px;
-    left: 25px;
+	&:hover {
+		cursor: move;
+	}
 
-    &:hover {
-        cursor: move;
-    }
+	&--heading {
+		font-size: 1.3em;
+	}
 
-    &--heading {
-        font-size: 1.3em;
-    }
-
-    &--button {
-        display: block;
-        width: 100%;
-        text-transform: none;
-    }
+	&--button {
+		display: block;
+		width: 100%;
+		text-transform: none;
+	}
 }
 
 .debug {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    padding: 20px;
+	position: absolute;
+	top: 25px;
+	right: 25px;
+	padding: 20px;
 
-    &:hover {
-        cursor: move;
-    }
+	&:hover {
+		cursor: move;
+	}
 
-    &--heading {
-        font-size: 1.3em;
-    }
-
+	&--heading {
+		font-size: 1.3em;
+	}
 }
 
 .timeline {
-    position: absolute;
-    bottom: 50px;
-    right: 25px;
-    padding: 20px;
+	position: absolute;
+	bottom: 50px;
+	right: 25px;
+	padding: 20px;
 
-    &:hover {
-        cursor: move;
-    }
+	&:hover {
+		cursor: move;
+	}
 
-    &--add-btn {
-        margin-top: 20px;
-    }
+	&--add-btn {
+		margin-top: 20px;
+	}
 }
 
 .mixins {
-    @extend .timeline;
-    left: 25px;
-    right: auto;
+	@extend .timeline;
+	left: 25px;
+	right: auto;
 }
 
 .spine-elements {
-    .collapsible-body {
-        cursor: auto;
-        overflow-y: scroll;
-        max-height: 300px;
-    }
+	.collapsible-body {
+		cursor: auto;
+		overflow-y: scroll;
+		max-height: 300px;
+	}
 }
 
 .spine-data {
-    display: flex;
-    flex-direction: row;
-    cursor: pointer;
+	display: flex;
+	flex-direction: row;
+	cursor: pointer;
 
-    &__name {
-        background-color: #4f3c3c;
-        color: #fff;
-        flex-grow: 1;
+	&__name {
+		background-color: #4f3c3c;
+		color: #fff;
+		flex-grow: 1;
 
-        &--disabled {
-            cursor: auto;
-        }
+		&--disabled {
+			cursor: auto;
+		}
 
-        &:hover {
-            background-color: #917a7a;
-        }
-    }
+		&:hover {
+			background-color: #917a7a;
+		}
+	}
 
-    &__copy {
-        background-color: #3c4e4f;
-        color: #fff;
+	&__copy {
+		background-color: #3c4e4f;
+		color: #fff;
 
-        &:hover {
-            background-color: #90aaac;
-        }
-    }
+		&:hover {
+			background-color: #90aaac;
+		}
+	}
 }
