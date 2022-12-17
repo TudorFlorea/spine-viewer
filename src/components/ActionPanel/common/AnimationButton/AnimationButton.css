@@ -1,0 +1,31 @@
+.animation-button-wrapper {
+    display: flex;
+    /* margin-bottom: 3px; */
+}
+
+.animation-button {
+    color: var(--text-color);
+    background-color: var(--accent-color);
+    width: 80%;
+    border: none;
+    font-size: 16px;
+}
+
+.animation-button:hover {
+    filter: brightness(80%);
+    cursor: pointer;
+}
+
+.animation-copy {
+    background-color: rgb(228,234,240);
+    display: inline-block;
+    height: 18px;
+    /* width: 18%; */
+    flex-grow: 1;
+    text-align: center;
+}
+
+.animation-copy:hover {
+    filter: brightness(80%);
+    cursor: pointer;
+}

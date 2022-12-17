@@ -1,0 +1,60 @@
+.timeline-add,
+.timeline-play {
+    width: 90%;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-add__button,
+.timeline-play__button {
+    margin-top: 10px;
+    border: none;
+    padding: 10px 0;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.timeline-add__button:hover,
+.timeline-play__button:hover {
+    filter: brightness(80%);
+    cursor: pointer;
+}
+
+.timeline-list {
+    width: 90%;
+    margin: 0 auto 12px auto;
+}
+
+.timeline-list-item {
+    margin: 12px auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.timeline-list__text {
+    color: var(--text-color);
+}
+
+.timeline-list__delete-button {
+    background-color: #f92a2a;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    color: var(--text-color);
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    font-weight: bold;
+}
+
+.timeline-list__delete-button:hover {
+    filter: brightness(80%);
+    cursor: pointer;
+}
+
+.timeline-heading {
+    color: var(--text-color);
+    text-align: center;
+}

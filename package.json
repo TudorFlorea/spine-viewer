@@ -1,45 +1,37 @@
 {
-  "name": "spine-viewer",
-  "version": "0.1.0",
+  "name": "s-viewer",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "copy-to-clipboard": "^3.3.1",
-    "materialize-css": "^1.0.0",
-    "pixi": "^0.3.1",
-    "pixi-spine": "^2.1.8",
-    "react": "^16.13.0",
-    "react-color": "^2.18.1",
-    "react-dom": "^16.13.0",
-    "react-draggable": "^4.4.3",
-    "react-dropzone": "^11.0.1",
-    "react-scripts": "3.4.0",
-    "uuid": "^8.2.0"
-  },
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start --no-cache",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@pixi-spine/all-3.8": "^3.1.0",
+    "copy-to-clipboard": "^3.3.3",
+    "i": "^0.3.7",
+    "npm": "^9.2.0",
+    "pixi-spine": "^3.1.0",
+    "pixi.js": "^5.3.12",
+    "react": "^18.2.0",
+    "react-color": "^2.19.3",
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-select": "^5.7.0",
+    "react-toastify": "^9.1.1",
+    "uuid": "^9.0.0",
+    "zustand": "^4.1.5"
   },
   "devDependencies": {
-    "node-sass": "^4.14.1"
+    "@types/pixi-spine": "^1.4.2",
+    "@types/react": "^18.0.24",
+    "@types/react-color": "^3.0.6",
+    "@types/react-dom": "^18.0.8",
+    "@types/uuid": "^9.0.0",
+    "@vitejs/plugin-react": "^2.2.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.2.3"
   }
 }

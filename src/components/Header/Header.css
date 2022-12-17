@@ -1,0 +1,17 @@
+.header {
+    background-color: var(--primary-color);
+    /* box-shadow: var(--box-shadow); */
+    position: relative;
+    z-index: 10;
+    border-bottom: 2px solid var(--border-color);
+    z-index: 30;
+}
+
+.header__content-wrapper {
+    margin: 0 auto;
+    max-width: var(--content-width);
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    height: var(--header-height);
+}
