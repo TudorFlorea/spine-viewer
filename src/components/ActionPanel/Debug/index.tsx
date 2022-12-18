@@ -1,7 +1,12 @@
 import React from "react";
 import events from "../../../events";
 import { useSpineViewerStore } from "../../../store";
-import PanelCheckbox from "../PanelCheckbox";
+import ActionPanelContent from "../common/ActionPanelContent";
+import PanelCheckbox from "../common/PanelCheckbox";
+
+interface DebugProps {
+    title: string;
+}
 
 const Debug = () => {
 
@@ -35,25 +40,18 @@ const Debug = () => {
     }
 
     return (
-        <div className="action-panel-content">
-             <h2 className="action-panel-heading">Debug</h2>
-
+        <ActionPanelContent title="Debug" >
             {debugOptions.map(option => {
                 return (
-                    <PanelCheckbox 
+                    <PanelCheckbox
+                        key={option.prop}
                         onChange={handleDebugOptionChange(option.prop)}
                         checked={option.value}
                         label={option.label}
                     />
-                    // <div key={option.prop}>
-                    //     <label>
-                    //         {option.label}
-                    //         <input onChange={handleDebugOptionChange(option.prop)} type="checkbox" checked={option.value} />
-                    //     </label>
-                    // </div>
                 )
             })}
-        </div>
+        </ActionPanelContent>
     )
 }
 

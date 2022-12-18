@@ -5,7 +5,7 @@ import { useSpineViewerStore } from "../../../store";
 import Button from "../../base/Button";
 import { uuid } from "../../../utils/numberUtils";
 import "./Timeline.css";
-import { TimelineEntry } from "../../../interfaces";
+import ActionPanelContent from "../common/ActionPanelContent";
 
 
 interface SelectOption {
@@ -64,54 +64,51 @@ const Timeline = () => {
 
 
     return (
-        <div className="action-panel-content">
-            <h2 className="action-panel-heading">Timeline</h2>
+        <ActionPanelContent title="Timeline">
+            <>
+                <div className="timeline-add">
+                    <Select
+                        onChange={handleAnimationChange}
+                        options={selectOptions}
+                    />
 
+                    <Button
+                        className="timeline-add__button"
+                        label="Add to timeline"
+                        onClick={handleAddToTimeline}
+                    />
+                </div>
 
+                {timeline.length > 0 && (
+                    <>
+                        <p className="timeline-heading">Timeline animations</p>
+                        <div className="timeline-list">
+                            {timeline.map(entry => {
+                                return (
+                                    <div key={entry.id} className="timeline-list-item">
+                                        <span className="timeline-list__text">{entry.animation}</span>
+                                        <Button
+                                            className="timeline-list__delete-button"
+                                            label="X"
+                                            onClick={handleRemoveFromTimeline(entry.id)}
+                                        />
+                                    </div>
+                                );
+                            })}
 
-            <div className="timeline-add">
-                <Select
-                    onChange={handleAnimationChange}
-                    options={selectOptions}
-                />
+                        </div>
 
-                <Button
-                    className="timeline-add__button"
-                    label="Add to timeline"
-                    onClick={handleAddToTimeline}
-                />
-            </div>
-
-            {timeline.length > 0 && (
-                <>
-                    <p className="timeline-heading">Timeline animations</p>
-                    <div className="timeline-list">
-                        {timeline.map(entry => {
-                            return (
-                                <div key={entry.id} className="timeline-list-item">
-                                    <span className="timeline-list__text">{entry.animation}</span>
-                                    <Button
-                                        className="timeline-list__delete-button"
-                                        label="X"
-                                        onClick={handleRemoveFromTimeline(entry.id)}
-                                    />
-                                </div>
-                            );
-                        })}
-
-                    </div>
-
-                    <div className="timeline-play">
-                        <Button
-                            className="timeline-play__button"
-                            label="Play timeline"
-                            onClick={handlePlayTimeline}
-                        />
-                    </div>
-                </>
-            )}
-
-        </div>
+                        <div className="timeline-play">
+                            <Button
+                                className="timeline-play__button"
+                                label="Play timeline"
+                                onClick={handlePlayTimeline}
+                            />
+                        </div>
+                    </>
+                )}
+            </>
+        </ActionPanelContent>
     )
 }
 

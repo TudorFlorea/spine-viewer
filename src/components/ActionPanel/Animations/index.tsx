@@ -1,7 +1,8 @@
 import events from "../../../events";
 import { useSpineViewerStore } from "../../../store";
-import PanelCheckbox from "../PanelCheckbox";
+import PanelCheckbox from "../common/PanelCheckbox";
 import AnimationButton from "../common/AnimationButton";
+import ActionPanelContent from "../common/ActionPanelContent";
 
 
 const Animations = () => {
@@ -23,20 +24,21 @@ const Animations = () => {
     }
 
     return (
-        <div className="action-panel-content">
-            <h2 className="action-panel-heading">Animations</h2>
+        <ActionPanelContent
+            title="Animations"
+        >
+            <>
+                <PanelCheckbox
+                    onChange={e => setLoopAnimations(e.target.checked)}
+                    checked={loopAnimations}
+                    label="Play looped animations"
+                />
 
-            <PanelCheckbox
-                onChange={e => setLoopAnimations(e.target.checked)}
-                checked={loopAnimations}
-                label="Play looped animations"
-            />
-
-            {animations.map(animation => {
-                return (<AnimationButton key={animation} label={animation} onClick={() => handleAnimationClick(animation)} />)
-            })}
-
-        </div>
+                {animations.map(animation => {
+                    return (<AnimationButton key={animation} label={animation} onClick={() => handleAnimationClick(animation)} />)
+                })}
+            </>
+        </ActionPanelContent>
     )
 }
 

@@ -1,8 +1,9 @@
 import { useSpineViewerStore } from "../../../store";
+import ActionPanelContent from "../common/ActionPanelContent";
 
 const Mixins = () => {
 
-    const {mixins, animations, setMixins} = useSpineViewerStore(store => {
+    const { mixins, animations, setMixins } = useSpineViewerStore(store => {
         return {
             animations: store.animations,
             mixins: store.mixins,
@@ -11,10 +12,7 @@ const Mixins = () => {
     })
 
     return (
-        <>
-            <p>Mixins</p>
-            
-        </>
+        <ActionPanelContent title="Mixins"></ActionPanelContent>
     )
 }
 

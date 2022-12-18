@@ -1,4 +1,4 @@
-import Checkbox from "../../base/Checkbox";
+import Checkbox from "../../../base/Checkbox";
 import "./PanelCheckbox.css";
 
 interface PanelCheckboxProps {
@@ -7,7 +7,7 @@ interface PanelCheckboxProps {
     label: string;
 }
 
-const PanelCheckbox: React.FC<PanelCheckboxProps> = ({checked, onChange, label}) => {
+const PanelCheckbox: React.FC<PanelCheckboxProps> = ({ checked, onChange, label }) => {
 
     return (
         <div className="action-panel__checkbox">

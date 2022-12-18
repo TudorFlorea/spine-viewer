@@ -7,19 +7,19 @@ export interface ActionMenuConfigItem {
 
 const actionMenuConfig: ActionMenuConfigItem[] = [
     {
-        icon: "/assets/images/play-grey.png",
+        icon: "/assets/svg/animations.svg",
         name: "animations",
         label: "Animations",
         visible: true
     },
     {
-        icon: "/assets/images/play-grey.png",
+        icon: "/assets/svg/skins.svg",
         name: "skins",
         label: "Skins",
         visible: true
     },
     {
-        icon: "/assets/images/play-grey.png",
+        icon: "/assets/svg/debug.svg",
         name: "debug",
         label: "Debug",
         visible: true
@@ -28,16 +28,16 @@ const actionMenuConfig: ActionMenuConfigItem[] = [
         icon: "/assets/images/play-grey.png",
         name: "mixins",
         label: "Mixins",
-        visible: true
+        visible: false
     },
     {
-        icon: "/assets/images/play-grey.png",
+        icon: "/assets/svg/timeline.svg",
         name: "timeline",
         label: "Timeline",
         visible: true
     },
     {
-        icon: "/assets/images/icon-settings.png",
+        icon: "/assets/svg/settings.svg",
         name: "settings",
         label: "Settings",
         visible: false

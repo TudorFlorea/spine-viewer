@@ -29,8 +29,8 @@
 .action-item__icon {
     display: block;
     margin: 9px auto;
+    max-width: 32px;
 }
-
 .action-item__label {
     color: var(--text-color);
     text-align: center;

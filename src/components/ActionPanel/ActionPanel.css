@@ -36,12 +36,3 @@
     transform: translateX(var(--action-bar-width));
     transition: transform 0.4s linear;
 }
-
-.action-panel-heading {
-    color: var(--text-color);
-    text-align: center;
-}
-
-.action-panel-content {
-    padding: 10px;
-}
