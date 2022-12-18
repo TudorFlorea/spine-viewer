@@ -16,7 +16,6 @@ const Animations = () => {
     });
 
     const handleAnimationClick = (animation: string) => {
-        console.log(animation);
         events.dispatchers.startAnimation({
             animation: animation,
             loop: loopAnimations

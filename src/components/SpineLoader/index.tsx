@@ -20,7 +20,6 @@ const SpineLoader = () => {
     });
 
     const onFilesLoaded = (files: FileEntry[]) => {
-        console.log(files)
         setLoadedFiles(files);
         setFilesLoading(false);
     };
@@ -30,7 +29,6 @@ const SpineLoader = () => {
     }
 
     const onLoadError = (message: string) => {
-        console.log(message);
         toast(message, errorToast);
         setFilesLoading(false);
         setLoadedFiles([]);

@@ -24,9 +24,9 @@ const missingFiles = (files: FileEntry[]): string[] => {
 
 interface DropZoneProps {
 	onStartLoadingFiles?: () => void;
-    onFilesLoaded: (files: FileEntry[]) => void;
-    onError: (message: string) => void;
-    className?: string;
+	onFilesLoaded: (files: FileEntry[]) => void;
+	onError: (message: string) => void;
+	className?: string;
 }
 
 const DropZone: React.FC<DropZoneProps> = (props) => {
@@ -50,7 +50,7 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 				};
 				reader.onload = () => {
 					const result = reader.result;
-					console.log(result);
+
 					files.push({
 						type: extension,
 						data: reader.result,
@@ -60,10 +60,8 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 					if (files.length === arr.length) {
 						const missing = missingFiles(files);
 						if (missing.length === 0) {
-							console.log("all files");
 							onFilesLoaded(files);
 						} else {
-							console.log("not all files", missing, files);
 							const message = `The following files are missing ${missing.join(
 								", "
 							)}`;
@@ -71,7 +69,6 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 						}
 					}
 				};
-				console.log(file);
 
 				switch (extension) {
 					case "json":
@@ -84,7 +81,7 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 						reader.readAsDataURL(file);
 						break;
 					default:
-						console.log("Unsopported file format: ", extension);
+						onError(`Unsopported file format: ${extension}`);
 				}
 			});
 		},
@@ -94,16 +91,15 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 
 	return (
 		<div
-			className={`dropzone ${props.className ? props.className : ""} ${
-				isDragActive ? "dropzone--active" : ""
-			}`}
+			className={`dropzone ${props.className ? props.className : ""} ${isDragActive ? "dropzone--active" : ""
+				}`}
 			{...getRootProps()}
 		>
 			<input {...getInputProps()} />
 			{isDragActive ? (
 				<p>Drop the files here ...</p>
 			) : (
-				<p>Drag 'n' drop some files here, or click to select files</p>
+				<p>Drag and drop files here, or click to select files</p>
 			)}
 		</div>
 	);

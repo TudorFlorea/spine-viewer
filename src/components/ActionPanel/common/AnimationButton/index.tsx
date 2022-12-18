@@ -13,7 +13,6 @@ const AnimationButton: React.FC<AnimationButtonProps> = ({ label, onClick }) => 
 
     const handleCopyClick = () => {
         copyToClipboard(label);
-        console.log("copied: ", label);
         toast(`Copied to clipboard: ${label}`, copyToast);
     };
 

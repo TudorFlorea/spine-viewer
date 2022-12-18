@@ -2,7 +2,7 @@ import { FileEntry } from "../interfaces";
 
 export const getExtension = (filename: string): string => {
     const fileArr = filename.split(".");
-	return fileArr[fileArr.length - 1];
+    return fileArr[fileArr.length - 1];
 }
 
 export const getFileNameFromPath = (path: string): string => {
@@ -39,7 +39,6 @@ export const loadText = (url: string): Promise<FileEntry> => {
         return response
             .text()
             .then(data => {
-                console.log("for: ", url, " data: ", data)
                 return new Promise(resolve => {
                     const extension = getExtension(url);
                     const name = getFileNameFromPath(url);

@@ -1,4 +1,4 @@
-import { ToastOptions } from "react-toastify";
+import { ToastOptions, Slide, Zoom } from "react-toastify";
 
 export const errorToast: ToastOptions = {
     position: "top-right",
@@ -10,6 +10,7 @@ export const errorToast: ToastOptions = {
     progress: undefined,
     className: "error-toast",
     theme: "light",
+    transition: Slide
 };
 
 export const copyToast: ToastOptions = {
@@ -21,6 +22,7 @@ export const copyToast: ToastOptions = {
     draggable: true,
     progress: undefined,
     theme: "light",
+    transition: Slide
 };
 
 export const spineEventToast: ToastOptions = {
@@ -32,6 +34,7 @@ export const spineEventToast: ToastOptions = {
     draggable: true,
     progress: undefined,
     theme: "light",
+    transition: Zoom
 }
 
 export default {

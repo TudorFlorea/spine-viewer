@@ -125,7 +125,6 @@ class PixiService {
                 events.dispatchers.spineEvent(event.data.name);
             },
             complete: (entry) => {
-                console.log("animation was ended at " + entry.trackIndex);
                 const nextAnimation = animations.shift();
 
                 if (nextAnimation) {
