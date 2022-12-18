@@ -1,5 +1,3 @@
-
-// import * as PixiSpine from "@pixi-spine/all-3.8";
 import {
     TextureAtlas,
     AtlasAttachmentLoader,
@@ -12,7 +10,6 @@ import {
     Spine
 } from "@pixi-spine/all-3.8";
 
-// import * as PIXI from "pixi.js";
 import {
     Application,
     BaseTexture,
@@ -92,6 +89,11 @@ class PixiService {
         this.spine?.state.clearListeners();
         this.spine?.skeleton.setToSetupPose();
         this.spine?.state.setAnimation(0, animationData.animation, animationData.loop);
+        this.spine?.state.addListener({
+            event: (_, event) => {
+                events.dispatchers.spineEvent(event.data.name);
+            }
+        })
     }
 
     private onSkinChange(skin: string): void {
@@ -119,6 +121,9 @@ class PixiService {
         this.spine?.skeleton.setToSetupPose();
         this.spine?.state.setAnimation(0, firstAnimation, false);
         this.spine?.state.addListener({
+            event: (_, event) => {
+                events.dispatchers.spineEvent(event.data.name);
+            },
             complete: (entry) => {
                 console.log("animation was ended at " + entry.trackIndex);
                 const nextAnimation = animations.shift();

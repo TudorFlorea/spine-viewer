@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { errorToast } from "../../config/toastsConfig";
 import { FileEntry } from "../../interfaces";
 import SpineProvider from "../../providers/SpineProvider";
 import { useSpineViewerStore } from "../../store";
@@ -30,7 +31,7 @@ const SpineLoader = () => {
 
     const onLoadError = (message: string) => {
         console.log(message);
-        toast(message);
+        toast(message, errorToast);
         setFilesLoading(false);
         setLoadedFiles([]);
     }

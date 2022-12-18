@@ -4,3 +4,9 @@
   background-color: var(--primary-color);
   z-index: 10;
 }
+
+.error-toast {
+  /* To overwrite the colors set by react-toastify */
+  background-color: rgb(204, 119, 119) !important;
+  color: #fff !important;
+}

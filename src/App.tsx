@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import './App.css';
 import ActionBar from './components/ActionBar';
 import Overlay from './components/base/Overlay';
@@ -11,6 +11,7 @@ import events from './events';
 import { SpineData } from './interfaces';
 import "react-toastify/dist/ReactToastify.css";
 import Reset from './components/Reset';
+import { spineEventToast } from './config/toastsConfig';
 
 function App() {
 
@@ -48,6 +49,10 @@ function App() {
         animations: spineData.animations,
         skins: spineData.skins
       });
+    });
+
+    events.handlers.onSpineEvent((spineEventName: string) => {
+      toast(spineEventName, spineEventToast);
     });
   }, []);
 

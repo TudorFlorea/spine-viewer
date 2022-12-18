@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { copyToast } from "../../../../config/toastsConfig";
 import { copyToClipboard } from "../../../../utils/copyUtil";
 import Button from "../../../base/Button";
 import "./AnimationButton.css";
@@ -13,7 +14,7 @@ const AnimationButton: React.FC<AnimationButtonProps> = ({ label, onClick }) => 
     const handleCopyClick = () => {
         copyToClipboard(label);
         console.log("copied: ", label);
-        toast(`Copied to clipboard: ${label}`);
+        toast(`Copied to clipboard: ${label}`, copyToast);
     };
 
     return (

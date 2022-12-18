@@ -18,6 +18,8 @@ import { onSkinChange } from "./handlers/onSkinChange";
 import { onSpineCreated } from "./handlers/onSpineCreated";
 import { onStartAnimation } from "./handlers/onStartAnimation";
 import { onTimelinePlay } from "./handlers/onTimelinePlay";
+import { spineEvent } from "./dispatchers/spineEvent";
+import { onSpineEvent } from "./handlers/onSpineEvent";
 
 const dispatchers = {
     debugOptionChange,
@@ -29,7 +31,8 @@ const dispatchers = {
     skinChange,
     spineCreated,
     startAnimation,
-    timelinePlay
+    timelinePlay,
+    spineEvent
 };
 
 const handlers = {
@@ -42,7 +45,8 @@ const handlers = {
     onSkinChange,
     onSpineCreated,
     onStartAnimation,
-    onTimelinePlay
+    onTimelinePlay,
+    onSpineEvent
 }
 
 export default {
