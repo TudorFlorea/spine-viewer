@@ -20,6 +20,7 @@ import { onStartAnimation } from "./handlers/onStartAnimation";
 import { onTimelinePlay } from "./handlers/onTimelinePlay";
 import { spineEvent } from "./dispatchers/spineEvent";
 import { onSpineEvent } from "./handlers/onSpineEvent";
+import { remove } from "./remove";
 
 const dispatchers = {
     debugOptionChange,
@@ -47,11 +48,11 @@ const handlers = {
     onStartAnimation,
     onTimelinePlay,
     onSpineEvent
-}
+};
 
 export default {
     dispatchers,
-    handlers
+    handlers,
 };
 
 

@@ -38,6 +38,30 @@ interface Point {
     y: number;
 }
 
+interface HandlerRemover<T> {
+    name: T;
+    removeHandler: () => void;
+}
+
+
+
+enum PixiServiceRemoveHandlers {
+    ON_START_ANIMATION,
+    ON_SKIN_CHANGED,
+    ON_SET_MIXIN,
+    ON_SET_CANVAS_BACKGROUND,
+    ON_TIMELINE_PLAY,
+    ON_DEBUG_OPTION_CHANGED,
+    ON_SETUP_POSE,
+    ON_DESTROY_PIXI_APP,
+    ON_FILES_LOADED,
+    ON_RESIZE,
+    ON_SCROLL,
+    ON_DRAG_START,
+    ON_DRAG_END,
+    ON_DRAG_MOVE
+}
+
 class PixiService {
     private spine: Spine | null;
     private app: Application | null;
@@ -46,6 +70,7 @@ class PixiService {
     private dragging: boolean;
     private initialPointerPosition: Point | null;
     private initialSpinePosition: Point | null;
+    private handlerRemovers: HandlerRemover<PixiServiceRemoveHandlers>[];
 
     constructor() {
         const spineClassesForDebug = {
@@ -70,18 +95,54 @@ class PixiService {
         this.dragging = false;
         this.initialPointerPosition = null;
         this.initialSpinePosition = null;
+        this.handlerRemovers = [];
     }
 
     public init(): void {
-        events.handlers.onStartAnimation(this.onStartAnimation.bind(this));
-        events.handlers.onSkinChange(this.onSkinChange.bind(this));
-        events.handlers.onSetMixin(this.onSetMixin.bind(this));
-        events.handlers.onSetCanvasBackground(this.onSetCanvasBackground.bind(this));
-        events.handlers.onTimelinePlay(this.onTimelinePlay.bind(this));
-        events.handlers.onDebugOptionChange(this.onDebugOptionChange.bind(this));
-        events.handlers.onSetupPose(this.onSetupPose.bind(this));
-        events.handlers.onDestroyPixiApp(this.onDestroyPixiApp.bind(this));
-        events.handlers.onFilesLoaded(this.onFilesLoaded.bind(this));
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_START_ANIMATION,
+            removeHandler: events.handlers.onStartAnimation(this.onStartAnimation.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_SKIN_CHANGED,
+            removeHandler: events.handlers.onSkinChange(this.onSkinChange.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_SET_MIXIN,
+            removeHandler: events.handlers.onSetMixin(this.onSetMixin.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_SET_CANVAS_BACKGROUND,
+            removeHandler: events.handlers.onSetCanvasBackground(this.onSetCanvasBackground.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_TIMELINE_PLAY,
+            removeHandler: events.handlers.onTimelinePlay(this.onTimelinePlay.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_DEBUG_OPTION_CHANGED,
+            removeHandler: events.handlers.onDebugOptionChange(this.onDebugOptionChange.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_SETUP_POSE,
+            removeHandler: events.handlers.onSetupPose(this.onSetupPose.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_DESTROY_PIXI_APP,
+            removeHandler: events.handlers.onDestroyPixiApp(this.onDestroyPixiApp.bind(this))
+        });
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_FILES_LOADED,
+            removeHandler: events.handlers.onFilesLoaded(this.onFilesLoaded.bind(this))
+        });
+    }
+
+    private removeAllEventListeners() {
+        this.handlerRemovers.forEach(handlerRemover => {
+            handlerRemover.removeHandler();
+        });
+
+        this.handlerRemovers = [];
     }
 
     private onStartAnimation(animationData: AnimationPlayData): void {
@@ -101,7 +162,7 @@ class PixiService {
     }
 
     private onSetMixin(mixin: SpineMixin): void {
-        // this.spine?.stateData.setMixin(mixin.fromAnim, mixin.toAnim, mixin.duration);
+        this.spine?.stateData.setMix(mixin.fromAnim, mixin.toAnim, mixin.duration);
     }
 
     private onSetCanvasBackground(background: string): void {
@@ -161,6 +222,24 @@ class PixiService {
             canvasWrapper.style.display = "none";
         }
         this.appInitialized = false;
+
+        this.removeAllEventListeners();
+    }
+
+    public dispose() {
+        this.spine = null;
+        this.background = null;
+        this.app?.destroy(true, {
+            children: true,
+            texture: true,
+            baseTexture: true
+        });
+        this.app = null;
+        const canvasWrapper = document.getElementById("canvas-wrapper");
+        if (canvasWrapper) {
+            canvasWrapper.style.display = "none";
+        }
+        this.appInitialized = false;
     }
 
     private onFilesLoaded(filesLoadedData: FilesLoadedData): void {
@@ -176,7 +255,7 @@ class PixiService {
             callback
         ) {
             const imageData = filesLoadedData.files.find((file) => file.path === line)?.data;
-            // @ts-ignore
+            //  @ts-ignore
             callback(BaseTexture.from(imageData));
         });
 
@@ -191,7 +270,7 @@ class PixiService {
         this.spine["drawDebug"] = true;
 
         const wrapper = document.getElementById("canvas-wrapper");
-        //#e4eaf0
+
         this.app = new Application({
             backgroundColor: hexStringToNumber(filesLoadedData.canvasBackground),
             antialias: true,
@@ -227,45 +306,69 @@ class PixiService {
         });
     }
 
-    private addGlobalListeners(): void {
-        const self = this;
+    private onScroll(event: WheelEvent) {
+        event.preventDefault();
 
-        this.app?.view.addEventListener("wheel", function (event) {
-            event.preventDefault();
+        if (!this.spine) return;
 
-            if (!self.spine) return;
+        const oldScale = this.spine.transform.scale;
+        let newScale = this.spine.transform.scale.x;
 
-            const oldScale = self.spine.transform.scale;
-            let newScale = self.spine.transform.scale.x;
+        if (event.deltaY <= 0) {
+            newScale = oldScale.x + 0.2;
+        } else if (event.deltaY > 0) {
+            newScale = oldScale.x - 0.2;
+        }
 
-            if (event.deltaY <= 0) {
-                newScale = oldScale.x + 0.2;
-            } else if (event.deltaY > 0) {
-                newScale = oldScale.x - 0.2;
-            }
+        if (newScale < 0.02) {
+            newScale = 0.02;
+        };
 
-            if (newScale < 0.02) {
-                newScale = 0.02;
-            };
+        this.spine.transform.scale.x = newScale;
+        this.spine.transform.scale.y = newScale;
+    }
 
-            self.spine.transform.scale.x = newScale;
-            self.spine.transform.scale.y = newScale;
-        });
+    private addOnScrollListener() {
+        const onScroll = this.onScroll.bind(this);
+        this.app?.view.addEventListener('wheel', onScroll);
 
-        window.addEventListener("resize", function () {
-            const canvas = document.querySelector("#canvas-wrapper canvas") as HTMLCanvasElement;
+        const removeOnScrollHandler = () => {
+            this.app?.view.removeEventListener('wheel', onScroll);
+        };
 
-            if (self.app && canvas) {
-                // self.app.screen.width = window.innerWidth;
-                // self.app.screen.height = window.innerHeight;
-                canvas.style.width = window.innerWidth + "px";
-                canvas.style.height = window.innerHeight + "px";
-            }
-
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_SCROLL,
+            removeHandler: removeOnScrollHandler
         });
     }
 
-    onDragStart(event: PixiDragEvent) {
+    private onResize() {
+        if (this.app && this.app.view) {
+            this.app.view.style.width = window.innerWidth + "px";
+            this.app.view.style.height = window.innerHeight + "px";
+        }
+    }
+
+    private addOnResizeListener() {
+        const onResize = this.onResize.bind(this);
+        window.addEventListener('resize', onResize);
+
+        const removeOnResizeHandler = () => {
+            window.removeEventListener('resize', onResize);
+        };
+
+        this.handlerRemovers.push({
+            name: PixiServiceRemoveHandlers.ON_RESIZE,
+            removeHandler: removeOnResizeHandler
+        });
+    }
+
+    private addGlobalListeners(): void {
+        this.addOnScrollListener();
+        this.addOnResizeListener();
+    }
+
+    private onDragStart(event: PixiDragEvent) {
         if (!this.spine) return;
         this.initialPointerPosition = Object.assign({}, event.data.global);
         this.initialSpinePosition = {
@@ -276,7 +379,7 @@ class PixiService {
         this.dragging = true;
     }
 
-    onDragEnd() {
+    private onDragEnd() {
         if (!this.spine) return;
         this.spine.alpha = 1;
         this.dragging = false;
@@ -284,7 +387,7 @@ class PixiService {
         this.initialSpinePosition = null;
     }
 
-    onDragMove(event: PixiDragEvent) {
+    private onDragMove(event: PixiDragEvent) {
         if (!this.spine || !this.initialPointerPosition || !this.initialSpinePosition) return;
         if (this.dragging) {
             const newPosition = event.data.global;

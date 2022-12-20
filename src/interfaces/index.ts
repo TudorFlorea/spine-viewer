@@ -11,6 +11,12 @@ export interface DispatchOptions<T> {
     detail?: T;
 }
 
+export interface RemoveOptions {
+    eventId: string;
+    handler: (evt: CustomEvent<any>) => void;
+    target?: EventTarget;
+}
+
 
 export interface HandleOptions {
     eventId: string;

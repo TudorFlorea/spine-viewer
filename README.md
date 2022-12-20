@@ -104,9 +104,12 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Better handling of window events and check for memory leaks
+- [x] Better handling of window events and check for memory leaks
+- [ ] Turn the app into a pwa
 - [ ] Better code splitting for faster load times
 - [ ] Add multiple demo spines
+- [ ] Add support for mixins
+- [ ] Add support for viewing the list of bones / slots
 
 
 See the [open issues](https://github.com/TudorFlorea/spine-viewer/issues) for a full list of proposed features (and known issues).

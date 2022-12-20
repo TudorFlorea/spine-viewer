@@ -34,8 +34,14 @@ function App() {
           files: loadedFiles,
           canvasBackground: canvasBackground
         });
+
+        document.getElementById("canvas-wrapper")!.style.display = "block";
+
+        return () => {
+          service.dispose();
+        }
       });
-      document.getElementById("canvas-wrapper")!.style.display = "block";
+
     }
   }, [loadedFiles]);
 
@@ -44,16 +50,21 @@ function App() {
   }, [canvasBackground]);
 
   useEffect(() => {
-    events.handlers.onSpineCreated((spineData: SpineData) => {
+    const removeSpineCreatedListener = events.handlers.onSpineCreated((spineData: SpineData) => {
       setMultiple({
         animations: spineData.animations,
         skins: spineData.skins
       });
     });
 
-    events.handlers.onSpineEvent((spineEventName: string) => {
+    const removeSpineEventListener = events.handlers.onSpineEvent((spineEventName: string) => {
       toast(spineEventName, spineEventToast);
     });
+
+    return () => {
+      removeSpineCreatedListener();
+      removeSpineEventListener();
+    }
   }, []);
 
   return (
