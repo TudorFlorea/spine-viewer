@@ -72,16 +72,11 @@ Keep in mind that it might not work with all versions of exports!
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
+#### Prerequisites
 
 You will need nodejs and npm installed in order to run this project
 
-### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+#### Installation
 
 1. Clone the repo
    ```sh
@@ -105,7 +100,7 @@ _Below is an example of how you can instruct your audience on installing and set
 ## Roadmap
 
 - [x] Better handling of window events and check for memory leaks
-- [ ] Turn the app into a pwa
+- [x] Turn the app into a pwa
 - [ ] Better code splitting for faster load times
 - [ ] Add multiple demo spines
 - [ ] Add support for mixins
