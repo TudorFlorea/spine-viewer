@@ -1,0 +1,9 @@
+.setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.setting__text {
+    color: var(--text-color);
+}

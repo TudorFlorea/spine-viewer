@@ -1,0 +1,20 @@
+
+.dropzone {
+	width: 80%;
+	margin: 20px auto;
+	text-align: center;
+	border: 3px dotted var(--accent-color);
+	cursor: pointer;
+	padding: 80px 10px;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	font-weight: bold;
+	font-size: 30px;
+}
+
+.dropzone--active {
+    border: 3px dotted rgb(30, 179, 50);
+}
+
+.dropzone p {
+	color: var(--text-color);
+}

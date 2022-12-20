@@ -1,0 +1,8 @@
+.action-panel-content {
+    padding: 10px;
+}
+
+.action-panel-heading {
+    color: var(--text-color);
+    text-align: center;
+}

@@ -1,0 +1,32 @@
+.theme-toggle {
+    width: 50px;
+    height: 30px;
+    margin-top: 10px;
+    background-color: black;
+    border: #1d92b2;
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 6px;
+    cursor: pointer;
+    display: flex;
+    position: relative;
+}
+
+.theme-toggle__ball {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    transition: transform 0.3s linear;
+}
+
+.theme-toggle__ball--light {
+    transform: translateX(0);
+}
+
+.theme-toggle__ball--dark {
+    transform: translateX(20px);
+}

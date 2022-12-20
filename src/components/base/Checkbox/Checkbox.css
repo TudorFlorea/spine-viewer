@@ -1,0 +1,41 @@
+.checkbox {
+  appearance: none;
+  height: 24px;
+  width: 24px;
+  background: var(--primary-color);
+  border: 2px solid var(--accent-color);
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.checkbox:disabled {
+    opacity: 0.7;
+    background: #b0b0b0;
+    cursor: not-allowed;
+  }
+
+.checkbox:after {
+    content: "";
+    display: block;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+  }
+
+.checkbox:checked:after {
+    transform: scale(1);
+}
+
+.checkbox:after {
+    width: 16px;
+    height: 16px;
+    margin: 4px;
+}
+
+.checkbox:checked {
+    border: none;
+    background-color: var(--accent-color);
+}
+
+.checkbox:checked:after {
+    content: url("data:image/svg+xml, <svg viewBox='0 0 16 15' xmlns='http://www.w3.org/2000/svg'><path fill='white' d='M15.25.847a1.51 1.51 0 0 1 .405 2.096L8.106 14.11a1.944 1.944 0 0 1-2.94.329L.6 10.156a1.51 1.51 0 1 1 2.067-2.202l3.645 3.42 6.841-10.122a1.51 1.51 0 0 1 2.098-.405Z'/></svg>");
+}

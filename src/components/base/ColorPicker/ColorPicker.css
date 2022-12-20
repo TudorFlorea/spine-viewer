@@ -1,0 +1,40 @@
+.color-picker {
+	display: inline-block;
+	padding-top: 5px;
+	margin-right: 10px;
+}
+
+.color-picker__swatch {
+    padding: 5px;
+    background: #fff;
+    border-radius: 1px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    cursor: pointer;
+}
+
+.color-picker__color {
+    width: 30px;
+    height: 30px;
+    border-radius: 2px;
+}
+
+.color-picker__popover {
+    position: absolute;
+    z-index: 2;
+    right: 20px;
+}
+
+.color-picker__cover {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+.color-picker__text {
+    font-size: 12px;
+    display: block;
+    text-align: center;
+}

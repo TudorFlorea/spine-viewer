@@ -1,0 +1,10 @@
+
+.action-panel__checkbox {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px auto;
+}
+
+.action-panel__checkbox span {
+    color: var(--text-color);
+}
