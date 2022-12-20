@@ -2,14 +2,7 @@ import { useCallback } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import { FileEntry } from "../../../interfaces";
 import { getExtension } from "../../../utils/fileUtils";
-import "./Dropzone.css";
-
-// export interface LoadedFile {
-//     type: string;
-//     data: string | ArrayBuffer | null;
-//     name: string;
-//     path: string | undefined;
-// }
+import "./DropZone.css";
 
 const missingFiles = (files: FileEntry[]): string[] => {
 	const expectedTypes = ["json", "atlas", "png"];
