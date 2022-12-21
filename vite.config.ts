@@ -8,9 +8,6 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      devOptions: {
-        enabled: true
-      },
       manifest: {
         name: "Spine Viewer",
         short_name: "SpineViewer",
