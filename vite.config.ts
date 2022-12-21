@@ -8,21 +8,26 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true
+      },
       manifest: {
         name: "Spine Viewer",
         short_name: "SpineViewer",
         description: "Spine export animation viewer and debugger",
-        theme_color: "#fff",
+        theme_color: "#ffffff",
         icons: [
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'mask'
           }
         ]
       }
