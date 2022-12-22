@@ -8,7 +8,7 @@ import {
     SkeletonBounds,
     PathAttachment,
     Spine
-} from "@pixi-spine/all-4.1";
+} from "@pixi-spine/all-3.8";
 
 import {
     Application,
