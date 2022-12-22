@@ -20,7 +20,7 @@ const AnimationButton: React.FC<AnimationButtonProps> = ({ label, onClick }) => 
         <div className="animation-button-wrapper">
             <Button className="animation-button" label={label} onClick={onClick} />
             <span onClick={handleCopyClick} className="animation-copy">
-                <img src="/assets/images/copy_small.png" />
+                <img src="/assets/images/copy_small.png" alt="copy animation" />
             </span>
         </div>
     )

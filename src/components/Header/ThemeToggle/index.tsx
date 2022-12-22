@@ -9,7 +9,7 @@ const ThemeToggle: React.FC = () => {
     const themeClass = theme === "dark" ? "theme-toggle__ball--dark" : "theme-toggle__ball--light";
 
     const handleOnClick = () => {
-        setTheme(theme === "dark"? "light" : "dark");
+        setTheme(theme === "dark" ? "light" : "dark");
     };
 
     useEffect(() => {
@@ -19,8 +19,8 @@ const ThemeToggle: React.FC = () => {
     return (
         <div onClick={handleOnClick} className="theme-toggle">
             <div className={`theme-toggle__ball ${themeClass}`}></div>
-            <img src="/assets/images/dark-mode.png" />
-            <img src="/assets/images/light-mode.png" />
+            <img src="/assets/images/dark-mode.png" alt="dark mode icon" />
+            <img src="/assets/images/light-mode.png" alt="light mode icon" />
         </div>
     )
 };

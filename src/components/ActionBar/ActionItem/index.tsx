@@ -12,7 +12,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ name, icon, label, selected, on
 
     return (
         <div className={className} onClick={() => onClick(name)}>
-            <img className="action-item__icon" src={icon} />
+            <img className="action-item__icon" src={icon} alt={`${label} icon`} />
             <p className="action-item__label">{label}</p>
         </div>
     );
