@@ -344,8 +344,7 @@ class PixiService {
 
     private onResize() {
         if (this.app && this.app.view) {
-            this.app.view.style.width = window.innerWidth + "px";
-            this.app.view.style.height = window.innerHeight + "px";
+            this.app.renderer.resize(window.innerWidth, window.innerHeight);
         }
     }
 
