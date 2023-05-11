@@ -5,11 +5,24 @@ import { getExtension } from "../../../utils/fileUtils";
 import "./DropZone.css";
 
 const missingFiles = (files: FileEntry[]): string[] => {
-	const expectedTypes = ["json", "atlas", "png"];
+	const expectedTypes = [
+		{
+			extensions: ["json"],
+			name: "json"
+		},
+		{
+			extensions: ["atlas"],
+			name: "atlas"
+		},
+		{
+			extensions: ["png", "jpg", "webp"],
+			name: "image"
+		}
+	];
 	const missingFiles: string[] = [];
-	expectedTypes.forEach((type) => {
-		if (files.find((elem) => elem.type === type) === undefined) {
-			missingFiles.push(type);
+	expectedTypes.forEach((fileType) => {
+		if (files.find((elem) => fileType.extensions.some(extension => extension === elem.type)) === undefined) {
+			missingFiles.push(fileType.name);
 		}
 	});
 	return missingFiles;
@@ -71,6 +84,12 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 						reader.readAsText(file);
 						break;
 					case "png":
+						reader.readAsDataURL(file);
+						break;
+					case "webp":
+						reader.readAsDataURL(file);
+						break;
+					case "jpg":
 						reader.readAsDataURL(file);
 						break;
 					default:
