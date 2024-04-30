@@ -4,6 +4,7 @@ import { devtools } from "zustand/middleware";
 import { DebugConfigOption, FileEntry, TimelineEntry } from "../../interfaces";
 import { SpineMixin } from "../../interfaces";
 import debugConfig from "../../config/debugConfig";
+import SpineLoaderService from "../../services/SpineLoaderService";
 
 export interface SpineViewerStore {
     actionMenuItems: ActionMenuConfigItem[],
@@ -32,6 +33,7 @@ export interface SpineViewerActions {
     setLoopAnimations: (loopAnimations: boolean) => void;
     setTimeScale: (timeScale: number) => void;
     reset: () => void;
+    initAsyncData: () => void;
 }
 
 const initialState: SpineViewerStore = {
@@ -107,6 +109,19 @@ export const useSpineViewerStore = create<SpineViewerStore & SpineViewerActions>
         },
         reset: () => {
             set(_ => initialState);
+        },
+        initAsyncData: () => {
+            const params = new URLSearchParams(window.location.search);
+            const loadUrl = params.get("loadUrl");
+            if(loadUrl) {
+                set(_ => ({filesLoading: true}));
+                SpineLoaderService.loadFromUrl(loadUrl).then((data) => {
+                    set(_ => ({
+                        filesLoading: false,
+                        loadedFiles: data
+                    }));
+                })
+            }
         }
     }))
 );

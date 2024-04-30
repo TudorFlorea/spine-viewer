@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { toast, ToastContainer } from 'react-toastify';
 import './App.css';
 import ActionBar from './components/ActionBar';
@@ -15,14 +15,15 @@ import { spineEventToast } from './config/toastsConfig';
 
 function App() {
 
-  const { filesLoading, loadedFiles, setMultiple } = useSpineViewerStore(store => ({
+  const { filesLoading, loadedFiles, setMultiple, initAsyncData } = useSpineViewerStore(store => ({
     filesLoading: store.filesLoading,
     loadedFiles: store.loadedFiles,
-    setMultiple: store.setMultiple
+    setMultiple: store.setMultiple,
+    initAsyncData: store.initAsyncData
   }));
 
   const canvasBackground = useSettingsStore(store => store.canvasBackground);
-  const hasLoadedFiles = loadedFiles.length > 0;
+  const hasLoadedFiles = useMemo(() => loadedFiles.length > 0, [loadedFiles]);
 
   useEffect(() => {
     if (hasLoadedFiles) {
@@ -66,6 +67,10 @@ function App() {
       removeSpineEventListener();
     }
   }, []);
+
+  useEffect(() => {
+    initAsyncData();
+  }, [])
 
   return (
     <div className="app">
