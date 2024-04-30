@@ -92,6 +92,8 @@ You will need nodejs and npm installed in order to run this project
    ```
 4. Visit http://localhost:5173/
 
+If you want to load a spine from a link use the http://localhost:5173?loadUrl=LINK_TO_JSON_FILE link.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -101,6 +103,7 @@ You will need nodejs and npm installed in order to run this project
 
 - [x] Better handling of window events and check for memory leaks
 - [x] Turn the app into a pwa
+- [x] Add support for loading a spine from a link
 - [ ] Better code splitting for faster load times
 - [ ] Add multiple demo spines
 - [ ] Add support for mixins
