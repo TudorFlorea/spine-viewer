@@ -7,12 +7,8 @@ import "./DropZone.css";
 const missingFiles = (files: FileEntry[]): string[] => {
 	const expectedTypes = [
 		{
-			extensions: ["json"],
-			name: "json"
-		},
-		{
-			extensions: ["skel"],
-			name: "skel"
+			extensions: ["json", "skel"],
+			name: "json | skel"
 		},
 		{
 			extensions: ["atlas"],
