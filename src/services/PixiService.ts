@@ -7,7 +7,8 @@ import {
     ClippingAttachment,
     SkeletonBounds,
     PathAttachment,
-    Spine
+    Spine,
+    SkeletonBinary,
 } from "@pixi-spine/all-3.8";
 
 import {
@@ -248,8 +249,9 @@ class PixiService {
 
         const files = filesLoadedData.files;
         const rawJson = files.find((file) => file.type === "json")?.data;
+        const rawSkeleton = files.find((file) => file.type === "skel")?.data as ArrayBuffer;
         const rawAtlas = files.find((file) => file.type === "atlas")?.data;
-        const rawSkeletonData = JSON.parse(rawJson as string);
+        const rawSkeletonData = !!rawSkeleton ? new Uint8Array(rawSkeleton) :JSON.parse(rawJson as string);
         const spineAtlas = new TextureAtlas(rawAtlas as string, function (
             line,
             callback
@@ -262,7 +264,7 @@ class PixiService {
         const spineAtlasLoader = new AtlasAttachmentLoader(
             spineAtlas
         );
-        const spineJsonParser = new SkeletonJson(spineAtlasLoader);
+        const spineJsonParser = new (!!rawSkeleton ? SkeletonBinary: SkeletonJson)(spineAtlasLoader);
         const spineData = spineJsonParser.readSkeletonData(rawSkeletonData);
         this.spine = new Spine(spineData);
 

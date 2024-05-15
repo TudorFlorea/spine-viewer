@@ -11,6 +11,10 @@ const missingFiles = (files: FileEntry[]): string[] => {
 			name: "json"
 		},
 		{
+			extensions: ["skel"],
+			name: "skel"
+		},
+		{
 			extensions: ["atlas"],
 			name: "atlas"
 		},
@@ -80,6 +84,9 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 					case "json":
 						reader.readAsText(file);
 						break;
+                    case 'skel':
+                        reader.readAsArrayBuffer(file);
+                        break;
 					case "atlas":
 						reader.readAsText(file);
 						break;
