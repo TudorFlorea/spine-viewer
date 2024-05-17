@@ -7,8 +7,8 @@ import "./DropZone.css";
 const missingFiles = (files: FileEntry[]): string[] => {
 	const expectedTypes = [
 		{
-			extensions: ["json"],
-			name: "json"
+			extensions: ["json", "skel"],
+			name: "json | skel"
 		},
 		{
 			extensions: ["atlas"],
@@ -80,6 +80,9 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 					case "json":
 						reader.readAsText(file);
 						break;
+                    case 'skel':
+                        reader.readAsArrayBuffer(file);
+                        break;
 					case "atlas":
 						reader.readAsText(file);
 						break;
