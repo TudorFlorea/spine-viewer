@@ -48,9 +48,9 @@ class SpineLoaderService {
         loadedImages.forEach(image => {
             filesLoaded.push({
                 data: image.data,
-                name: image.name,
-                path: image.name,
-                type: getExtension(image.name)
+                name: image.name.trim(),
+                path: image.name.trim(),
+                type: getExtension(image.name).trim()
             });
         })
 
