@@ -1,7 +1,7 @@
 .color-picker {
 	display: inline-block;
 	padding-top: 5px;
-	margin-right: 10px;
+	/* margin-right: 10px; */
 }
 
 .color-picker__swatch {

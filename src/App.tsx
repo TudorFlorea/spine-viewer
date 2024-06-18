@@ -12,6 +12,7 @@ import { SpineData } from './interfaces';
 import "react-toastify/dist/ReactToastify.css";
 import Reset from './components/Reset';
 import { spineEventToast } from './config/toastsConfig';
+import StatsService from './services/StatsService';
 
 function App() {
 
@@ -21,6 +22,10 @@ function App() {
     setMultiple: store.setMultiple,
     initAsyncData: store.initAsyncData
   }));
+
+  const {showStats} = useSettingsStore(store => ({
+    showStats: store.showStats
+  }))
 
   const canvasBackground = useSettingsStore(store => store.canvasBackground);
   const hasLoadedFiles = useMemo(() => loadedFiles.length > 0, [loadedFiles]);
@@ -49,6 +54,10 @@ function App() {
   useEffect(() => {
     events.dispatchers.setCanvasBackground(canvasBackground);
   }, [canvasBackground]);
+
+  useEffect(() => {
+    showStats ? StatsService.show() : StatsService.hide();
+}, [showStats]);
 
   useEffect(() => {
     const removeSpineCreatedListener = events.handlers.onSpineCreated((spineData: SpineData) => {
