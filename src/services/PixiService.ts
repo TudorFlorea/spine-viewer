@@ -1,15 +1,18 @@
+import { TextureAtlas } from "@pixi-spine/base";
+import * as spine37 from "@pixi-spine/runtime-3.7";
+import * as spine38 from "@pixi-spine/runtime-3.8";
+import * as spine41 from "@pixi-spine/runtime-4.1";
+import { Spine } from "./SpineUniSourceCode";
+import { detectSpineVersion, SPINE_VERSION } from "./versions";
+
+// Import classes for spineDebug
 import {
-    TextureAtlas,
-    AtlasAttachmentLoader,
-    SkeletonJson,
     RegionAttachment,
     MeshAttachment,
     ClippingAttachment,
     SkeletonBounds,
     PathAttachment,
-    Spine,
-    SkeletonBinary,
-} from "@pixi-spine/all-3.8";
+} from "@pixi-spine/runtime-3.8";
 
 import {
     Application,
@@ -243,7 +246,7 @@ class PixiService {
         this.appInitialized = false;
     }
 
-    private onFilesLoaded(filesLoadedData: FilesLoadedData): void {
+    private async onFilesLoaded(filesLoadedData: FilesLoadedData): Promise<void> {
 
         if (this.appInitialized) return;
 
@@ -251,20 +254,100 @@ class PixiService {
         const rawJson = files.find((file) => file.type === "json")?.data;
         const rawSkeleton = files.find((file) => file.type === "skel")?.data as ArrayBuffer;
         const rawAtlas = files.find((file) => file.type === "atlas")?.data;
-        const rawSkeletonData = !!rawSkeleton ? new Uint8Array(rawSkeleton) :JSON.parse(rawJson as string);
+        const rawSkeletonData = !!rawSkeleton ? new Uint8Array(rawSkeleton) : JSON.parse(rawJson as string);
+        
+        // Pre-load all images as BaseTextures
+        const loadedTextures = new Map<string, BaseTexture>();
+        
+        const imageFiles = filesLoadedData.files.filter(file => 
+            file.type !== "json" && file.type !== "atlas" && file.type !== "skel"
+        );
+        
+        // Load all images asynchronously
+        await Promise.all(imageFiles.map(file => {
+            return new Promise<void>((resolve, reject) => {
+                const imageData = file.data;
+                
+                if (!imageData) {
+                    console.error(`Image not found: ${file.path}`);
+                    // @ts-ignore
+                    loadedTextures.set(file.path!, BaseTexture.EMPTY);
+                    resolve();
+                    return;
+                }
+                
+                if (typeof imageData === 'string') {
+                    const img = new Image();
+                    img.onload = () => {
+                        loadedTextures.set(file.path!, BaseTexture.from(img));
+                        resolve();
+                    };
+                    img.onerror = (err) => {
+                        console.error(`Failed to load image: ${file.path}`, err);
+                        // @ts-ignore
+                        loadedTextures.set(file.path!, BaseTexture.EMPTY);
+                        resolve(); // Resolve anyway to not block other images
+                    };
+                    img.src = imageData;
+                } else {
+                    // @ts-ignore
+                    loadedTextures.set(file.path!, BaseTexture.from(imageData));
+                    resolve();
+                }
+            });
+        }));
+        
+        // Now create the TextureAtlas with pre-loaded textures
         const spineAtlas = new TextureAtlas(rawAtlas as string, function (
             line,
             callback
         ) {
-            const imageData = filesLoadedData.files.find((file) => file.path === line)?.data;
-            //  @ts-ignore
-            callback(BaseTexture.from(imageData));
+            const texture = loadedTextures.get(line);
+            if (texture) {
+                callback(texture);
+            } else {
+                console.error(`Texture not found for: ${line}`);
+                // @ts-ignore
+                callback(BaseTexture.EMPTY);
+            }
         });
+        
+        // Detect spine version from the raw data
+        let versionString: string | undefined;
+        if (rawJson) {
+            const jsonData = JSON.parse(rawJson as string);
+            versionString = jsonData.skeleton?.spine;
+        }
+        const detectedVersion = detectSpineVersion(versionString);
+        
+        // Select appropriate runtime classes based on version
+        let spineRuntime: any = spine38; // Default fallback
+        switch (detectedVersion) {
+            case SPINE_VERSION.VER37:
+                spineRuntime = spine37;
+                console.log('Using Spine runtime 3.7');
+                break;
+            case SPINE_VERSION.VER38:
+                spineRuntime = spine38;
+                console.log('Using Spine runtime 3.8');
+                break;
+            case SPINE_VERSION.VER40:
+            case SPINE_VERSION.VER41:
+                spineRuntime = spine41;
+                console.log(`Using Spine runtime 4.1 for version ${detectedVersion}`);
+                break;
+            case SPINE_VERSION.UNKNOWN:
+                console.warn('Unknown spine version, using runtime 3.8 as fallback');
+                spineRuntime = spine38;
+                break;
+        }
 
-        const spineAtlasLoader = new AtlasAttachmentLoader(
+        const spineAtlasLoader = new spineRuntime.AtlasAttachmentLoader(
             spineAtlas
         );
-        const spineJsonParser = new (!!rawSkeleton ? SkeletonBinary: SkeletonJson)(spineAtlasLoader);
+        
+        const SpineParser = !!rawSkeleton ? spineRuntime.SkeletonBinary : spineRuntime.SkeletonJson;
+        const spineJsonParser = new SpineParser(spineAtlasLoader);
         const spineData = spineJsonParser.readSkeletonData(rawSkeletonData);
         this.spine = new Spine(spineData);
 
